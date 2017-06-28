@@ -15,8 +15,8 @@ namespace CleenApi.Database
     public T AddOrUpdate<T>(T dbo) where T : class, IEntity
     {
       T existingDbo = dbo.Id > 0
-        ? GetById<T>(dbo.Id)
-        : null;
+                        ? GetById<T>(dbo.Id)
+                        : null;
 
       if (existingDbo == null)
       {

@@ -90,7 +90,8 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Source\Controllers\BaseApiController.cs" />
+    <Compile Include="Source\Controllers\BaseCleenApiController.cs" />
+    <Compile Include="Source\Entities\IEntityQuery.cs" />
     <Compile Include="Source\Controllers\UserController.cs" />
     <Compile Include="Source\Controllers\WorkspaceController.cs" />
     <Compile Include="Source\Database\CleenApiDbContext.cs" />
@@ -99,12 +100,14 @@
     <Compile Include="Source\Entities\IEntityChanges.cs" />
     <Compile Include="Source\Entities\Implementations\Users\User.cs" />
     <Compile Include="Source\Entities\Implementations\Users\UserChanges.cs" />
+    <Compile Include="Source\Entities\Implementations\Users\UserQuery.cs" />
     <Compile Include="Source\Entities\Implementations\Workspaces\Workspace.cs" />
     <Compile Include="Source\Entities\Implementations\Workspaces\WorkspaceChanges.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Source\Entities\Implementations\Workspaces\WorkspaceQuery.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

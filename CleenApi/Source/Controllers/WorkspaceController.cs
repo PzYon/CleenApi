@@ -2,7 +2,7 @@
 
 namespace CleenApi.Controllers
 {
-  public class WorkspaceController : BaseApiController<Workspace, WorkspaceChanges>
+  public class WorkspaceController : BaseCleenApiController<Workspace, WorkspaceChanges, WorkspaceQuery>
   {
   }
 }

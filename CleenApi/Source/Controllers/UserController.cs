@@ -2,7 +2,7 @@
 
 namespace CleenApi.Controllers
 {
-  public class UserController : BaseApiController<User, UserChanges>
+  public class UserController : BaseCleenApiController<User, UserChanges, UserQuery>
   {
   }
 }
