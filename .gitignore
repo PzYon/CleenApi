@@ -1,0 +1,10 @@
+*.suo
+*.DotSettings
+*.user
+*.pubxml
+*/bin/*
+*/obj/*
+/packages
+/TestResults
+/WebApi/FileCache
+.vs
