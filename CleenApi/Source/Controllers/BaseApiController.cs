@@ -1,5 +1,6 @@
 ﻿using System.Data.Entity;
 using System.Linq;
+using System.Web;
 using System.Web.Http;
 using CleenApi.Database;
 using CleenApi.Entities;
@@ -31,12 +32,18 @@ namespace CleenApi.Controllers
 
     public TEntity Post(TEntityChanges entityChanges)
     {
-      var entityToAdd = entityChanges.Id.HasValue
-        ? DbSet.FirstOrDefault(e => e.Id == entityChanges.Id.Value)
-        : DbSet.Create();
+      TEntity entity = entityChanges.Id.HasValue
+                         ? DbSet.FirstOrDefault(e => e.Id == entityChanges.Id.Value)
+                         : DbSet.Create();
 
-      entityToAdd = entityChanges.ApplyValues(entityToAdd);
-      return Db.AddOrUpdate(entityToAdd);
+      entity = entityChanges.ApplyValues(Db, entity);
+
+      if (entityChanges.IsValid(entity))
+      {
+        return Db.AddOrUpdate(entity);
+      }
+
+      throw new HttpException(500, $"The entity of type {typeof(TEntity).Name} is invalid.");
     }
 
     protected override void Dispose(bool disposing)

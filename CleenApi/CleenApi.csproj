@@ -101,7 +101,6 @@
     <Compile Include="Source\Entities\Implementations\Users\UserChanges.cs" />
     <Compile Include="Source\Entities\Implementations\Workspaces\Workspace.cs" />
     <Compile Include="Source\Entities\Implementations\Workspaces\WorkspaceChanges.cs" />
-    <Compile Include="Source\Startup\WebApiConfig.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

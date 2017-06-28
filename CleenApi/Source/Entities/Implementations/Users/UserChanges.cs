@@ -1,3 +1,5 @@
+using CleenApi.Database;
+
 namespace CleenApi.Entities.Implementations.Users
 {
   public class UserChanges : IEntityChanges<User>
@@ -8,7 +10,7 @@ namespace CleenApi.Entities.Implementations.Users
 
     public string Surname { get; set; }
 
-    public User ApplyValues(User user)
+    public User ApplyValues(CleenApiDbContext db, User user)
     {
       if (!string.IsNullOrEmpty(GivenName))
       {
@@ -21,6 +23,11 @@ namespace CleenApi.Entities.Implementations.Users
       }
 
       return user;
+    }
+
+    public bool IsValid(User entity)
+    {
+      return !string.IsNullOrEmpty(GivenName) && !string.IsNullOrEmpty(Surname);
     }
   }
 }
