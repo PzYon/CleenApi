@@ -23,9 +23,11 @@ namespace CleenApi.Entities.Implementations.Workspaces
     public UserEntitySet GetUsersSet(int workspaceId)
     {
       // note: SelectMany is a hack to prevent an execution but still return only the users of the workspace
-      return new UserEntitySet(Db.Workspaces.Where(w => w.Id == workspaceId).Take(1).SelectMany(w => w.Users));
-
-      // todo: add DB here (to use always the same instance!)
+      return new UserEntitySet(Db,
+                               Db.Workspaces
+                                 .Where(w => w.Id == workspaceId)
+                                 .Take(1)
+                                 .SelectMany(w => w.Users));
     }
   }
 }

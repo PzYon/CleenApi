@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
@@ -13,11 +14,13 @@ namespace CleenApi.Entities.Implementations
     where TEntityChanges : class, IEntityChanges<TEntity>
     where TEntityQuery : class, IEntityQuery<TEntity>, new()
   {
-    protected readonly CleenApiDbContext Db = new CleenApiDbContext();
+    protected CleenApiDbContext Db { get; private set; }
 
     protected DbSet<TEntity> DbSet => Db.Set<TEntity>();
 
-    protected IQueryable<TEntity> Entities { get; }
+    protected IQueryable<TEntity> Entities => entities ?? DbSet;
+
+    private readonly IQueryable<TEntity> entities;
 
     protected BaseEntitySet() : this(null)
     {
@@ -25,7 +28,17 @@ namespace CleenApi.Entities.Implementations
 
     protected BaseEntitySet(IQueryable<TEntity> entities)
     {
-      Entities = entities ?? DbSet;
+      this.entities = entities;
+    }
+
+    public void SetDb(CleenApiDbContext db)
+    {
+      if (Db != null)
+      {
+        throw new ArgumentException("Cannot set DB as DB is already set.");
+      }
+
+      Db = db;
     }
 
     public TEntity Get(int id)

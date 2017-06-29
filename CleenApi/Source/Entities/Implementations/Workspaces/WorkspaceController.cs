@@ -10,21 +10,22 @@ namespace CleenApi.Entities.Implementations.Workspaces
     [Route("workspace/{workspaceId}/likes")]
     public int GetLikes(int workspaceId)
     {
-      return Repo.GetLikes(workspaceId);
+      return EntitySet.GetLikes(workspaceId);
     }
 
     [HttpPost]
     [Route("workspace/{workspaceId}/likes")]
     public int UpdateLikes(int workspaceId)
     {
-      return Repo.UpdateLikes(workspaceId);
+      return EntitySet.UpdateLikes(workspaceId);
     }
 
     [HttpGet]
     [Route("workspace/{workspaceId}/users")]
     public User[] GetUsers(int workspaceId)
     {
-      return Repo.GetUsersSet(workspaceId).Get();
+      return EntitySet.GetUsersSet(workspaceId)
+                      .Get(ParseUrlConditions());
     }
   }
 }
