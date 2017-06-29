@@ -27,13 +27,7 @@ namespace CleenApi.Controllers
 
     public TEntity Get(int id)
     {
-      TEntity entity = DbSet.FirstOrDefault(t => t.Id == id);
-      if (entity == null)
-      {
-        throw CreateNotFoundException(id);
-      }
-
-      return entity;
+      return GetById(id);
     }
 
     public TEntity[] Get()
@@ -51,6 +45,11 @@ namespace CleenApi.Controllers
 
     public TEntity Post(TEntityChanges entityChanges)
     {
+      if (entityChanges == null)
+      {
+        throw CreateInternalServerErrorException();
+      }
+
       TEntity entity = entityChanges.Id.HasValue
                          ? DbSet.FirstOrDefault(e => e.Id == entityChanges.Id.Value)
                          : DbSet.Create();
@@ -59,8 +58,7 @@ namespace CleenApi.Controllers
 
       if (!entityChanges.IsValid(entity))
       {
-        throw new HttpException((int) HttpStatusCode.InternalServerError,
-                                $"The entity of type {typeof(TEntity).Name} is invalid.");
+        throw CreateInternalServerErrorException();
       }
 
       return Db.AddOrUpdate(entity);
@@ -84,10 +82,27 @@ namespace CleenApi.Controllers
       Db.Dispose();
     }
 
+    protected TEntity GetById(int id)
+    {
+      TEntity entity = DbSet.FirstOrDefault(e => e.Id == id);
+      if (entity == null)
+      {
+        throw CreateNotFoundException(id);
+      }
+
+      return entity;
+    }
+
     private static HttpException CreateNotFoundException(int id)
     {
-      return new HttpException((int)HttpStatusCode.NotFound,
+      return new HttpException((int) HttpStatusCode.NotFound,
                                $"{typeof(TEntity).Name} with id {id} does not exist.");
+    }
+
+    private static HttpException CreateInternalServerErrorException()
+    {
+      return new HttpException((int) HttpStatusCode.InternalServerError,
+                               $"The entity of type {typeof(TEntity).Name} is invalid.");
     }
   }
 }

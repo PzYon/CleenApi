@@ -9,6 +9,8 @@ namespace CleenApi.Entities.Implementations.Workspaces
 
     public string Title { get; set; }
 
+    public int Likes { get; set; }
+
     public List<User> Users { get; set; } = new List<User>();
   }
 }
