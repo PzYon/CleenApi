@@ -6,5 +6,5 @@
 */obj/*
 /packages
 /TestResults
-/WebApi/FileCache
+/CleenApi/App_Data/
 .vs

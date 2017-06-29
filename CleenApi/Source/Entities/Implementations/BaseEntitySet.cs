@@ -1,17 +1,14 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Web;
-using System.Web.Http;
 using CleenApi.Database;
-using CleenApi.Entities;
 
-namespace CleenApi.Controllers
+namespace CleenApi.Entities.Implementations
 {
-  public abstract class BaseCleenApiController<TEntity, TEntityChanges, TEntityQuery> : ApiController
+  public abstract class BaseEntitySet<TEntity, TEntityChanges, TEntityQuery> : IEntitySet<TEntity, TEntityChanges>
     where TEntity : class, IEntity, new()
     where TEntityChanges : class, IEntityChanges<TEntity>
     where TEntityQuery : class, IEntityQuery<TEntity>, new()
@@ -20,7 +17,7 @@ namespace CleenApi.Controllers
 
     protected DbSet<TEntity> DbSet => Db.Set<TEntity>();
 
-    protected BaseCleenApiController()
+    protected BaseEntitySet()
     {
       Db = new CleenApiDbContext();
     }
@@ -30,12 +27,11 @@ namespace CleenApi.Controllers
       return GetById(id);
     }
 
-    public TEntity[] Get()
+    public TEntity[] Get(KeyValuePair<string, string>[] conditions)
     {
       IQueryable<TEntity> query = DbSet.AsQueryable();
 
-      KeyValuePair<string, string>[] conditions = Request.GetQueryNameValuePairs().ToArray();
-      if (conditions.Any())
+      if (conditions?.Any() ?? false)
       {
         query = new TEntityQuery().Build(query, conditions);
       }
@@ -43,7 +39,7 @@ namespace CleenApi.Controllers
       return query.ToArray();
     }
 
-    public TEntity Post(TEntityChanges entityChanges)
+    public TEntity Update(TEntityChanges entityChanges)
     {
       if (entityChanges == null)
       {
@@ -77,7 +73,7 @@ namespace CleenApi.Controllers
       }
     }
 
-    protected override void Dispose(bool disposing)
+    public void Dispose()
     {
       Db.Dispose();
     }

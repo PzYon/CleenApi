@@ -90,10 +90,14 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Source\Controllers\BaseCleenApiController.cs" />
+    <Compile Include="Source\Controllers\BaseEntitySetController.cs" />
+    <Compile Include="Source\Entities\Implementations\Users\UserController.cs" />
+    <Compile Include="Source\Entities\Implementations\Workspaces\WorkspaceController.cs" />
+    <Compile Include="Source\Entities\Implementations\BaseEntitySet.cs" />
+    <Compile Include="Source\Entities\IEntitySet.cs" />
     <Compile Include="Source\Entities\IEntityQuery.cs" />
-    <Compile Include="Source\Controllers\UserController.cs" />
-    <Compile Include="Source\Controllers\WorkspaceController.cs" />
+    <Compile Include="Source\Entities\Implementations\Users\UserEntitySet.cs" />
+    <Compile Include="Source\Entities\Implementations\Workspaces\WorkspaceEntitySet.cs" />
     <Compile Include="Source\Database\CleenApiDbContext.cs" />
     <Compile Include="Source\Database\CleenApiDbInitializer.cs" />
     <Compile Include="Source\Entities\IEntity.cs" />
@@ -118,7 +122,9 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

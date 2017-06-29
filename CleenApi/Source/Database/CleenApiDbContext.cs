@@ -12,33 +12,34 @@ namespace CleenApi.Database
 
     public DbSet<User> Users { get; set; }
 
-    public T AddOrUpdate<T>(T dbo) where T : class, IEntity
+    public CleenApiDbContext() : base("CleenApi")
     {
-      T existingDbo = dbo.Id > 0
-                        ? GetById<T>(dbo.Id)
+    }
+
+    public T AddOrUpdate<T>(T entity) where T : class, IEntity
+    {
+      T existingEntity = entity.Id > 0
+                        ? GetById<T>(entity.Id)
                         : null;
 
-      if (existingDbo == null)
+      if (existingEntity == null)
       {
-        dbo = Set<T>().Add(dbo);
+        entity = Set<T>().Add(entity);
       }
       else
       {
-        // existing item
-        Entry(existingDbo).CurrentValues.SetValues(dbo);
-        dbo = existingDbo;
+        Entry(existingEntity).CurrentValues.SetValues(entity);
+        entity = existingEntity;
       }
 
       SaveChanges();
 
-      return dbo;
+      return entity;
     }
 
-    public virtual T GetById<T>(int id) where T : class, IEntity
+    public T GetById<T>(int id) where T : class, IEntity
     {
-      IQueryable<T> set = Set<T>().AsQueryable();
-
-      return set.Single(o => o.Id == id);
+      return Set<T>().Single(o => o.Id == id);
     }
   }
 }
