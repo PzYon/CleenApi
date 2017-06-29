@@ -13,13 +13,19 @@ namespace CleenApi.Entities.Implementations
     where TEntityChanges : class, IEntityChanges<TEntity>
     where TEntityQuery : class, IEntityQuery<TEntity>, new()
   {
-    protected readonly CleenApiDbContext Db;
+    protected readonly CleenApiDbContext Db = new CleenApiDbContext();
 
     protected DbSet<TEntity> DbSet => Db.Set<TEntity>();
 
-    protected BaseEntitySet()
+    protected IQueryable<TEntity> Entities { get; }
+
+    protected BaseEntitySet() : this(null)
     {
-      Db = new CleenApiDbContext();
+    }
+
+    protected BaseEntitySet(IQueryable<TEntity> entities)
+    {
+      Entities = entities ?? DbSet;
     }
 
     public TEntity Get(int id)
@@ -27,9 +33,9 @@ namespace CleenApi.Entities.Implementations
       return GetById(id);
     }
 
-    public TEntity[] Get(KeyValuePair<string, string>[] conditions)
+    public TEntity[] Get(KeyValuePair<string, string>[] conditions = null)
     {
-      IQueryable<TEntity> query = DbSet.AsQueryable();
+      IQueryable<TEntity> query = Entities.AsQueryable();
 
       if (conditions?.Any() ?? false)
       {
@@ -47,8 +53,8 @@ namespace CleenApi.Entities.Implementations
       }
 
       TEntity entity = entityChanges.Id.HasValue
-                         ? DbSet.FirstOrDefault(e => e.Id == entityChanges.Id.Value)
-                         : DbSet.Create();
+                         ? Entities.FirstOrDefault(e => e.Id == entityChanges.Id.Value)
+                         : CreateNew();
 
       entity = entityChanges.ApplyValues(Db, entity);
 
@@ -80,13 +86,18 @@ namespace CleenApi.Entities.Implementations
 
     protected TEntity GetById(int id)
     {
-      TEntity entity = DbSet.FirstOrDefault(e => e.Id == id);
+      TEntity entity = Entities.FirstOrDefault(e => e.Id == id);
       if (entity == null)
       {
         throw CreateNotFoundException(id);
       }
 
       return entity;
+    }
+
+    private TEntity CreateNew()
+    {
+      return DbSet.Create();
     }
 
     private static HttpException CreateNotFoundException(int id)

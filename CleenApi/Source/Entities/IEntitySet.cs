@@ -9,7 +9,7 @@ namespace CleenApi.Entities
   {
     TEntity Get(int id);
 
-    TEntity[] Get(KeyValuePair<string, string>[] conditions);
+    TEntity[] Get(KeyValuePair<string, string>[] conditions = null);
 
     TEntity Update(TEntityChanges entityChanges);
 

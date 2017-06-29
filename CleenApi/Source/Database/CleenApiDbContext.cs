@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using CleenApi.Entities;
 using CleenApi.Entities.Implementations.Users;
@@ -14,13 +15,14 @@ namespace CleenApi.Database
 
     public CleenApiDbContext() : base("CleenApi")
     {
+      Database.Log = sql => Debug.Write(sql);
     }
 
     public T AddOrUpdate<T>(T entity) where T : class, IEntity
     {
       T existingEntity = entity.Id > 0
-                        ? GetById<T>(entity.Id)
-                        : null;
+                           ? GetById<T>(entity.Id)
+                           : null;
 
       if (existingEntity == null)
       {

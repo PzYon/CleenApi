@@ -36,7 +36,7 @@ namespace CleenApi.Entities.Implementations.Workspaces
 
     public bool IsValid(Workspace entity)
     {
-      return !string.IsNullOrEmpty(Title);
+      return !string.IsNullOrEmpty(entity.Title);
     }
   }
 }
