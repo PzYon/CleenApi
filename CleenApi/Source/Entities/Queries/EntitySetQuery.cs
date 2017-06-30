@@ -14,6 +14,8 @@ namespace CleenApi.Entities.Queries
 
     public Dictionary<string, SortDirection> SortFields = new Dictionary<string, SortDirection>();
 
+    public string[] Includes = new string[0];
+
     public EntitySetQuery(IEnumerable<KeyValuePair<string, string>> pairs)
     {
       foreach (KeyValuePair<string, string> pair in pairs)
@@ -40,6 +42,10 @@ namespace CleenApi.Entities.Queries
                 SortFields[sortField] = SortDirection.Ascending;
               }
             }
+            break;
+
+          case "$select":
+            Includes = pair.Value.Split(',').Select(v => v.Trim()).ToArray();
             break;
 
           default:

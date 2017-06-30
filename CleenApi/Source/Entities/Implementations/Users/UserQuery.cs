@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using CleenApi.Entities.Exceptions;
 using CleenApi.Entities.Queries;
@@ -34,7 +33,8 @@ namespace CleenApi.Entities.Implementations.Users
       return set;
     }
 
-    protected override IQueryable<User> HandleOrderBy(IQueryable<User> set, Dictionary<string, SortDirection> sortFields)
+    protected override IQueryable<User> HandleOrderBy(IQueryable<User> set,
+                                                      Dictionary<string, SortDirection> sortFields)
     {
       foreach (KeyValuePair<string, SortDirection> sortField in sortFields)
       {
@@ -59,6 +59,11 @@ namespace CleenApi.Entities.Implementations.Users
         }
       }
 
+      return set;
+    }
+
+    protected override IQueryable<User> HandleIncludes(IQueryable<User> set, string[] propertiesToInclude)
+    {
       return set;
     }
   }

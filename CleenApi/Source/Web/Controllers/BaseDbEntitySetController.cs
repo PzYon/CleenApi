@@ -17,6 +17,17 @@ namespace CleenApi.Web.Controllers
 
     private readonly CleenApiDbContext db = new CleenApiDbContext();
 
+    protected EntitySetQuery EntitySetQuery
+    {
+      get
+      {
+        KeyValuePair<string, string>[] pairs = Request.GetQueryNameValuePairs().ToArray();
+        return pairs.Any()
+                 ? new EntitySetQuery(pairs)
+                 : null;
+      }
+    }
+
     protected BaseDbEntitySetController()
     {
       EntitySet.SetDb(db);
@@ -29,7 +40,7 @@ namespace CleenApi.Web.Controllers
 
     public TEntity[] Get()
     {
-      return EntitySet.Get(GetEntitySetQuery()).ToArray();
+      return EntitySet.Get(EntitySetQuery).ToArray();
     }
 
     public TEntity Post(TEntityChanges entityChanges)
@@ -40,14 +51,6 @@ namespace CleenApi.Web.Controllers
     public void Delete(int id)
     {
       EntitySet.Delete(id);
-    }
-
-    protected EntitySetQuery GetEntitySetQuery()
-    {
-      KeyValuePair<string, string>[] pair = Request.GetQueryNameValuePairs().ToArray();
-      return pair.Any()
-               ? new EntitySetQuery(pair)
-               : null;
     }
 
     protected override void Dispose(bool disposing)

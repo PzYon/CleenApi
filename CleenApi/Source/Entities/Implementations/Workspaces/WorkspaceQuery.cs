@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using CleenApi.Entities.Exceptions;
 using CleenApi.Entities.Queries;
@@ -52,6 +53,21 @@ namespace CleenApi.Entities.Implementations.Workspaces
 
           default:
             throw new InvalidSortFieldException<Workspace>(fieldName);
+        }
+      }
+
+      return set;
+    }
+
+    protected override IQueryable<Workspace> HandleIncludes(IQueryable<Workspace> set, string[] propertiesToInclude)
+    {
+      foreach (string propertyToInclude in propertiesToInclude)
+      {
+        switch (propertyToInclude)
+        {
+          case nameof(Workspace.Users):
+            set = set.Include(s => s.Users);
+            break;
         }
       }
 
