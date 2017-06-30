@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
-using System.Net;
-using System.Web;
 using CleenApi.Database;
+using CleenApi.Entities.Exceptions;
 
 namespace CleenApi.Entities.Implementations
 {
@@ -22,11 +21,7 @@ namespace CleenApi.Entities.Implementations
 
     private readonly IQueryable<TEntity> entities;
 
-    protected BaseEntitySet() : this(null)
-    {
-    }
-
-    protected BaseEntitySet(IQueryable<TEntity> entities)
+    protected BaseEntitySet(IQueryable<TEntity> entities = null)
     {
       this.entities = entities;
     }
@@ -46,7 +41,7 @@ namespace CleenApi.Entities.Implementations
       return GetById(id);
     }
 
-    public TEntity[] Get(KeyValuePair<string, string>[] conditions = null)
+    public IQueryable<TEntity> Get(KeyValuePair<string, string>[] conditions = null)
     {
       IQueryable<TEntity> query = Entities.AsQueryable();
 
@@ -55,17 +50,19 @@ namespace CleenApi.Entities.Implementations
         query = new TEntityQuery().Build(query, conditions);
       }
 
-      return query.ToArray();
+      return query;
     }
 
     public TEntity Update(TEntityChanges entityChanges)
     {
       if (entityChanges == null)
       {
-        throw CreateInternalServerErrorException();
+        throw new EntityProcessingException<TEntity>("EntityChanges are null or cannot be parsed.");
       }
 
-      TEntity entity = entityChanges.Id.HasValue
+      bool isNew = entityChanges.Id.HasValue;
+
+      TEntity entity = isNew
                          ? Entities.FirstOrDefault(e => e.Id == entityChanges.Id.Value)
                          : CreateNew();
 
@@ -73,7 +70,11 @@ namespace CleenApi.Entities.Implementations
 
       if (!entityChanges.IsValid(entity))
       {
-        throw CreateInternalServerErrorException();
+        string message = isNew
+                           ? $"Entity with id {entity.Id} is not valid after applying changes."
+                           : "New entity is invalid";
+
+        throw new EntityProcessingException<TEntity>(message);
       }
 
       return Db.AddOrUpdate(entity);
@@ -88,7 +89,7 @@ namespace CleenApi.Entities.Implementations
       }
       catch (DbUpdateConcurrencyException)
       {
-        throw CreateNotFoundException(id);
+        throw new EntityNotFoundException<TEntity>(id);
       }
     }
 
@@ -102,7 +103,7 @@ namespace CleenApi.Entities.Implementations
       TEntity entity = Entities.FirstOrDefault(e => e.Id == id);
       if (entity == null)
       {
-        throw CreateNotFoundException(id);
+        throw new EntityNotFoundException<TEntity>(id);
       }
 
       return entity;
@@ -111,18 +112,6 @@ namespace CleenApi.Entities.Implementations
     private TEntity CreateNew()
     {
       return DbSet.Create();
-    }
-
-    private static HttpException CreateNotFoundException(int id)
-    {
-      return new HttpException((int) HttpStatusCode.NotFound,
-                               $"{typeof(TEntity).Name} with id {id} does not exist.");
-    }
-
-    private static HttpException CreateInternalServerErrorException()
-    {
-      return new HttpException((int) HttpStatusCode.InternalServerError,
-                               $"The entity of type {typeof(TEntity).Name} is invalid.");
     }
   }
 }

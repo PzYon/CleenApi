@@ -1,8 +1,9 @@
-﻿using System.Web.Http;
-using CleenApi.Controllers;
+﻿using System.Linq;
+using System.Web.Http;
 using CleenApi.Entities.Implementations.Users;
+using CleenApi.Entities.Implementations.Workspaces;
 
-namespace CleenApi.Entities.Implementations.Workspaces
+namespace CleenApi.Web.Controllers
 {
   public class WorkspaceController : BaseEntitySetController<WorkspaceEntitySet, Workspace, WorkspaceChanges>
   {
@@ -25,7 +26,8 @@ namespace CleenApi.Entities.Implementations.Workspaces
     public User[] GetUsers(int workspaceId)
     {
       return EntitySet.GetUsersSet(workspaceId)
-                      .Get(ParseUrlConditions());
+                      .Get(ParseUrlConditions())
+                      .ToArray();
     }
   }
 }

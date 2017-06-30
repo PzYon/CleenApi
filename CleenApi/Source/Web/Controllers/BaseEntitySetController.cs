@@ -5,7 +5,7 @@ using System.Web.Http;
 using CleenApi.Database;
 using CleenApi.Entities;
 
-namespace CleenApi.Controllers
+namespace CleenApi.Web.Controllers
 {
   public abstract class BaseEntitySetController<TEntitySet, TEntity, TEntityChanges> : ApiController
     where TEntitySet : class, IEntitySet<TEntity, TEntityChanges>, new()
@@ -30,7 +30,7 @@ namespace CleenApi.Controllers
 
     public TEntity[] Get()
     {
-      return EntitySet.Get(ParseUrlConditions());
+      return EntitySet.Get(ParseUrlConditions()).ToArray();
     }
 
     public TEntity Post(TEntityChanges entityChanges)

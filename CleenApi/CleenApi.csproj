@@ -90,9 +90,12 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Source\Controllers\BaseEntitySetController.cs" />
-    <Compile Include="Source\Entities\Implementations\Users\UserController.cs" />
-    <Compile Include="Source\Entities\Implementations\Workspaces\WorkspaceController.cs" />
+    <Compile Include="Source\Web\Controllers\BaseEntitySetController.cs" />
+    <Compile Include="Source\Entities\Exceptions\BaseEntitySetException.cs" />
+    <Compile Include="Source\Entities\Exceptions\EntityNotFoundException.cs" />
+    <Compile Include="Source\Entities\Exceptions\EntityProcessingException.cs" />
+    <Compile Include="Source\Web\Controllers\UserController.cs" />
+    <Compile Include="Source\Web\Controllers\WorkspaceController.cs" />
     <Compile Include="Source\Entities\Implementations\BaseEntitySet.cs" />
     <Compile Include="Source\Entities\IEntitySet.cs" />
     <Compile Include="Source\Entities\IEntityQuery.cs" />
@@ -112,6 +115,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Source\Entities\Implementations\Workspaces\WorkspaceQuery.cs" />
+    <Compile Include="Source\Web\CleenApiExceptionHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

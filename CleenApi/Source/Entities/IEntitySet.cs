@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using CleenApi.Database;
 
 namespace CleenApi.Entities
@@ -12,7 +13,7 @@ namespace CleenApi.Entities
 
     TEntity Get(int id);
 
-    TEntity[] Get(KeyValuePair<string, string>[] conditions = null);
+    IQueryable<TEntity> Get(KeyValuePair<string, string>[] conditions = null);
 
     TEntity Update(TEntityChanges entityChanges);
 
