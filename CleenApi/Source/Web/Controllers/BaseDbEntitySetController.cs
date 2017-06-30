@@ -4,22 +4,21 @@ using System.Net.Http;
 using System.Web.Http;
 using CleenApi.Database;
 using CleenApi.Entities;
+using CleenApi.Entities.Queries;
 
 namespace CleenApi.Web.Controllers
 {
-  public abstract class BaseEntitySetController<TEntitySet, TEntity, TEntityChanges> : ApiController
-    where TEntitySet : class, IEntitySet<TEntity, TEntityChanges>, new()
+  public abstract class BaseDbEntitySetController<TEntitySet, TEntity, TEntityChanges> : ApiController
     where TEntity : class, IEntity, new()
     where TEntityChanges : class, IEntityChanges<TEntity>
+    where TEntitySet : class, IEntitySet<TEntity, TEntityChanges>, new()
   {
-    protected TEntitySet EntitySet { get; }
+    protected readonly TEntitySet EntitySet = new TEntitySet();
 
-    private readonly CleenApiDbContext db;
+    private readonly CleenApiDbContext db = new CleenApiDbContext();
 
-    protected BaseEntitySetController()
+    protected BaseDbEntitySetController()
     {
-      db = new CleenApiDbContext();
-      EntitySet = new TEntitySet();
       EntitySet.SetDb(db);
     }
 
@@ -46,7 +45,9 @@ namespace CleenApi.Web.Controllers
     protected EntitySetQuery GetEntitySetQuery()
     {
       KeyValuePair<string, string>[] pair = Request.GetQueryNameValuePairs().ToArray();
-      return pair.Any() ? new EntitySetQuery(pair) : null;
+      return pair.Any()
+               ? new EntitySetQuery(pair)
+               : null;
     }
 
     protected override void Dispose(bool disposing)

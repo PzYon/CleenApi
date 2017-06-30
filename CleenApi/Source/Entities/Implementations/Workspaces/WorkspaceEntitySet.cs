@@ -3,7 +3,7 @@ using CleenApi.Entities.Implementations.Users;
 
 namespace CleenApi.Entities.Implementations.Workspaces
 {
-  public class WorkspaceEntitySet : BaseEntitySet<Workspace, WorkspaceChanges, WorkspaceQuery>
+  public class WorkspaceEntitySet : BaseDbEntitySet<Workspace, WorkspaceChanges, WorkspaceQuery>
   {
     public int GetLikes(int id)
     {
@@ -18,6 +18,18 @@ namespace CleenApi.Entities.Implementations.Workspaces
       Db.AddOrUpdate(w);
 
       return w.Likes;
+    }
+
+    public User AddUser(int workspaceId, UserChanges userChanges)
+    {
+      User user = GetUsersSet(workspaceId).Update(userChanges);
+
+      Workspace workspace = Get(workspaceId);
+      workspace.Users.Add(user);
+
+      Db.SaveChanges();
+
+      return user;
     }
 
     public UserEntitySet GetUsersSet(int workspaceId)

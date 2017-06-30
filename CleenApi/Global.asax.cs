@@ -10,6 +10,8 @@ namespace CleenApi
   {
     protected void Application_Start()
     {
+      System.Data.Entity.Database.SetInitializer(new CleenApiDbInitializer());
+
       GlobalConfiguration.Configure(SetupWebApi);
     }
 
@@ -21,8 +23,6 @@ namespace CleenApi
       config.Services.Replace(typeof(IExceptionHandler), new CleenApiExceptionHandler());
 
       config.Formatters.Remove(config.Formatters.XmlFormatter);
-
-      System.Data.Entity.Database.SetInitializer(new CleenApiDbInitializer());
     }
   }
 }

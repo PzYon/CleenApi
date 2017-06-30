@@ -5,7 +5,7 @@ using CleenApi.Entities.Implementations.Workspaces;
 
 namespace CleenApi.Web.Controllers
 {
-  public class WorkspaceController : BaseEntitySetController<WorkspaceEntitySet, Workspace, WorkspaceChanges>
+  public class WorkspaceController : BaseDbEntitySetController<WorkspaceEntitySet, Workspace, WorkspaceChanges>
   {
     [HttpGet]
     [Route("workspace/{workspaceId}/likes")]
@@ -28,6 +28,13 @@ namespace CleenApi.Web.Controllers
       return EntitySet.GetUsersSet(workspaceId)
                       .Get(GetEntitySetQuery())
                       .ToArray();
+    }
+
+    [HttpPost]
+    [Route("workspace/{workspaceId}/users")]
+    public User AddUser(int workspaceId, [FromBody] UserChanges userChanges)
+    {
+      return EntitySet.AddUser(workspaceId, userChanges);
     }
   }
 }

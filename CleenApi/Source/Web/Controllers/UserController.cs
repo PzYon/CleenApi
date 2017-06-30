@@ -2,7 +2,7 @@
 
 namespace CleenApi.Web.Controllers
 {
-  public class UserController : BaseEntitySetController<UserEntitySet, User, UserChanges>
+  public class UserController : BaseDbEntitySetController<UserEntitySet, User, UserChanges>
   {
   }
 }

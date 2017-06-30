@@ -12,12 +12,12 @@ namespace CleenApi.Entities.Implementations.Users
 
     public User ApplyValues(CleenApiDbContext db, User user)
     {
-      if (!string.IsNullOrEmpty(GivenName))
+      if (GivenName != null)
       {
         user.GivenName = GivenName;
       }
 
-      if (!string.IsNullOrEmpty(Surname))
+      if (Surname != null)
       {
         user.Surname = Surname;
       }

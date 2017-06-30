@@ -8,14 +8,19 @@ namespace CleenApi.Database
   {
     protected override void Seed(CleenApiDbContext context)
     {
-      context.Workspaces.Add(new Workspace {Title = "Foo"});
-      context.Workspaces.Add(new Workspace {Title = "Bar"});
-      context.Workspaces.Add(new Workspace {Title = "Miep"});
-      context.Workspaces.Add(new Workspace {Title = "Blubb"});
+      context.Workspaces.Add(new Workspace {Title = "IT"});
+      context.Workspaces.Add(new Workspace {Title = "Finance"});
+      context.Workspaces.Add(new Workspace {Title = "Project"});
+      context.Workspaces.Add(new Workspace {Title = "Corporate Fuckoff"});
+      context.Workspaces.Add(new Workspace {Title = "Human Capital"});
+      context.Workspaces.Add(new Workspace {Title = "Secret Stuff"});
 
       context.Users.Add(new User {GivenName = "Markus", Surname = "Doggweiler"});
       context.Users.Add(new User {GivenName = "Peter", Surname = "Sample"});
       context.Users.Add(new User {GivenName = "Eter", Surname = "Eger"});
+      context.Users.Add(new User {GivenName = "Franz", Surname = "Klammer"});
+      context.Users.Add(new User {GivenName = "Roger", Surname = "Federer"});
+      context.Users.Add(new User {GivenName = "Stanis", Surname = "Las"});
       context.Users.Add(new User {GivenName = "Franz", Surname = "Klammer"});
     }
   }

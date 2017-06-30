@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using CleenApi.Entities.Queries;
 
 namespace CleenApi.Entities.Implementations
 {
@@ -18,11 +19,15 @@ namespace CleenApi.Entities.Implementations
       }
 
       set = HandleConditions(set, entitySetQuery.Conditions);
+      set = HandleOrderBy(set, entitySetQuery.SortFields);
 
       return set;
     }
 
     protected abstract IQueryable<TEntity> HandleConditions(IQueryable<TEntity> set,
                                                             Dictionary<string, string> conditions);
+
+    protected abstract IQueryable<TEntity> HandleOrderBy(IQueryable<TEntity> set,
+                                                         Dictionary<string, SortDirection> sortFields);
   }
 }

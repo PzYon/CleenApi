@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using CleenApi.Database;
+using CleenApi.Entities.Queries;
 
 namespace CleenApi.Entities
 {
@@ -12,7 +13,7 @@ namespace CleenApi.Entities
 
     TEntity Get(int id);
 
-    IQueryable<TEntity> Get(EntitySetQuery entitySetQuery);
+    IQueryable<TEntity> Get(EntitySetQuery query);
 
     TEntity Update(TEntityChanges entityChanges);
 

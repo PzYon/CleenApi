@@ -92,15 +92,19 @@
   <ItemGroup>
     <Compile Include="Source\Entities\Exceptions\IEntityNotFoundException.cs" />
     <Compile Include="Source\Entities\Exceptions\IEntityProcessingException.cs" />
+    <Compile Include="Source\Entities\Exceptions\InvalidConditionException.cs" />
+    <Compile Include="Source\Entities\Exceptions\InvalidEntityChangesException.cs" />
+    <Compile Include="Source\Entities\Exceptions\InvalidSortFieldException.cs" />
     <Compile Include="Source\Entities\Implementations\BaseEntityQuery.cs" />
-    <Compile Include="Source\Entities\EntitySetQuery.cs" />
-    <Compile Include="Source\Web\Controllers\BaseEntitySetController.cs" />
+    <Compile Include="Source\Entities\Queries\EntitySetQuery.cs" />
+    <Compile Include="Source\Entities\Queries\SortDirection.cs" />
+    <Compile Include="Source\Web\Controllers\BaseDbEntitySetController.cs" />
     <Compile Include="Source\Entities\Exceptions\BaseEntitySetException.cs" />
     <Compile Include="Source\Entities\Exceptions\EntityNotFoundException.cs" />
     <Compile Include="Source\Entities\Exceptions\EntityProcessingException.cs" />
     <Compile Include="Source\Web\Controllers\UserController.cs" />
     <Compile Include="Source\Web\Controllers\WorkspaceController.cs" />
-    <Compile Include="Source\Entities\Implementations\BaseEntitySet.cs" />
+    <Compile Include="Source\Entities\Implementations\BaseDbEntitySet.cs" />
     <Compile Include="Source\Entities\IEntitySet.cs" />
     <Compile Include="Source\Entities\IEntityQuery.cs" />
     <Compile Include="Source\Entities\Implementations\Users\UserEntitySet.cs" />

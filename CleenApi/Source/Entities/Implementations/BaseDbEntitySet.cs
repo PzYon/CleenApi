@@ -4,10 +4,11 @@ using System.Data.Entity.Infrastructure;
 using System.Linq;
 using CleenApi.Database;
 using CleenApi.Entities.Exceptions;
+using CleenApi.Entities.Queries;
 
 namespace CleenApi.Entities.Implementations
 {
-  public abstract class BaseEntitySet<TEntity, TEntityChanges, TEntityQuery> : IEntitySet<TEntity, TEntityChanges>
+  public abstract class BaseDbEntitySet<TEntity, TEntityChanges, TEntityQuery> : IEntitySet<TEntity, TEntityChanges>
     where TEntity : class, IEntity, new()
     where TEntityChanges : class, IEntityChanges<TEntity>
     where TEntityQuery : class, IEntityQuery<TEntity>, new()
@@ -20,7 +21,7 @@ namespace CleenApi.Entities.Implementations
 
     private readonly IQueryable<TEntity> entities;
 
-    protected BaseEntitySet(IQueryable<TEntity> entities = null)
+    protected BaseDbEntitySet(IQueryable<TEntity> entities = null)
     {
       this.entities = entities;
     }
@@ -42,12 +43,12 @@ namespace CleenApi.Entities.Implementations
       return GetById(id);
     }
 
-    public IQueryable<TEntity> Get(EntitySetQuery entitySetQuery = null)
+    public IQueryable<TEntity> Get(EntitySetQuery query = null)
     {
       IQueryable<TEntity> queryable = Entities.AsQueryable();
 
-      return entitySetQuery != null
-               ? new TEntityQuery().Build(queryable, entitySetQuery)
+      return query != null
+               ? new TEntityQuery().Build(queryable, query)
                : queryable;
     }
 
@@ -58,11 +59,11 @@ namespace CleenApi.Entities.Implementations
         throw new EntityProcessingException<TEntity>("EntityChanges are null or cannot be parsed.");
       }
 
-      bool isNew = entityChanges.Id.HasValue;
+      bool isNew = entityChanges.Id.HasValue && entityChanges.Id.Value > 0;
 
       TEntity entity = isNew
-                         ? Entities.FirstOrDefault(e => e.Id == entityChanges.Id.Value)
-                         : CreateNew();
+                         ? GetById(entityChanges.Id.Value)
+                         : DbSet.Create();
 
       entity = entityChanges.ApplyValues(Db, entity);
 
@@ -71,11 +72,7 @@ namespace CleenApi.Entities.Implementations
         return Db.AddOrUpdate(entity);
       }
 
-      string message = isNew
-                         ? $"Entity with id {entity.Id} is not valid after applying changes."
-                         : "New entity is invalid";
-
-      throw new EntityProcessingException<TEntity>(message);
+      throw new InvalidEntityChangesException<TEntity>(entityChanges.Id);
     }
 
     public void Delete(int id)
@@ -105,11 +102,6 @@ namespace CleenApi.Entities.Implementations
       }
 
       return entity;
-    }
-
-    private TEntity CreateNew()
-    {
-      return DbSet.Create();
     }
   }
 }
