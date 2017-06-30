@@ -26,7 +26,7 @@ namespace CleenApi.Web.Controllers
     public User[] GetUsers(int workspaceId)
     {
       return EntitySet.GetUsersSet(workspaceId)
-                      .Get(ParseUrlConditions())
+                      .Get(GetEntitySetQuery())
                       .ToArray();
     }
   }

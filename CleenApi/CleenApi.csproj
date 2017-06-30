@@ -90,6 +90,10 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Source\Entities\Exceptions\IEntityNotFoundException.cs" />
+    <Compile Include="Source\Entities\Exceptions\IEntityProcessingException.cs" />
+    <Compile Include="Source\Entities\Implementations\BaseEntityQuery.cs" />
+    <Compile Include="Source\Entities\EntitySetQuery.cs" />
     <Compile Include="Source\Web\Controllers\BaseEntitySetController.cs" />
     <Compile Include="Source\Entities\Exceptions\BaseEntitySetException.cs" />
     <Compile Include="Source\Entities\Exceptions\EntityNotFoundException.cs" />

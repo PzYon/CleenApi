@@ -4,9 +4,10 @@ using System.Linq;
 
 namespace CleenApi.Entities.Implementations.Users
 {
-  public class UserQuery : IEntityQuery<User>
+  public class UserQuery : BaseEntityQuery<User>
   {
-    public IQueryable<User> Build(IQueryable<User> set, KeyValuePair<string, string>[] conditions)
+    protected override IQueryable<User> HandleConditions(IQueryable<User> set,
+                                                         Dictionary<string, string> conditions)
     {
       foreach (KeyValuePair<string, string> condition in conditions)
       {

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
@@ -26,6 +25,8 @@ namespace CleenApi.Entities.Implementations
       this.entities = entities;
     }
 
+    // hack: Db needs to be set via an interface method as generics don't support
+    // new() constraint with constructor parameters.
     public void SetDb(CleenApiDbContext db)
     {
       if (Db != null)
@@ -41,16 +42,13 @@ namespace CleenApi.Entities.Implementations
       return GetById(id);
     }
 
-    public IQueryable<TEntity> Get(KeyValuePair<string, string>[] conditions = null)
+    public IQueryable<TEntity> Get(EntitySetQuery entitySetQuery = null)
     {
-      IQueryable<TEntity> query = Entities.AsQueryable();
+      IQueryable<TEntity> queryable = Entities.AsQueryable();
 
-      if (conditions?.Any() ?? false)
-      {
-        query = new TEntityQuery().Build(query, conditions);
-      }
-
-      return query;
+      return entitySetQuery != null
+               ? new TEntityQuery().Build(queryable, entitySetQuery)
+               : queryable;
     }
 
     public TEntity Update(TEntityChanges entityChanges)
@@ -68,16 +66,16 @@ namespace CleenApi.Entities.Implementations
 
       entity = entityChanges.ApplyValues(Db, entity);
 
-      if (!entityChanges.IsValid(entity))
+      if (entityChanges.IsValid(entity))
       {
-        string message = isNew
-                           ? $"Entity with id {entity.Id} is not valid after applying changes."
-                           : "New entity is invalid";
-
-        throw new EntityProcessingException<TEntity>(message);
+        return Db.AddOrUpdate(entity);
       }
 
-      return Db.AddOrUpdate(entity);
+      string message = isNew
+                         ? $"Entity with id {entity.Id} is not valid after applying changes."
+                         : "New entity is invalid";
+
+      throw new EntityProcessingException<TEntity>(message);
     }
 
     public void Delete(int id)

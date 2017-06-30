@@ -4,9 +4,10 @@ using System.Linq;
 
 namespace CleenApi.Entities.Implementations.Workspaces
 {
-  public class WorkspaceQuery : IEntityQuery<Workspace>
+  public class WorkspaceQuery : BaseEntityQuery<Workspace>
   {
-    public IQueryable<Workspace> Build(IQueryable<Workspace> set, KeyValuePair<string, string>[] conditions)
+    protected override IQueryable<Workspace> HandleConditions(IQueryable<Workspace> set,
+                                                              Dictionary<string, string> conditions)
     {
       foreach (KeyValuePair<string, string> condition in conditions)
       {

@@ -30,7 +30,7 @@ namespace CleenApi.Web.Controllers
 
     public TEntity[] Get()
     {
-      return EntitySet.Get(ParseUrlConditions()).ToArray();
+      return EntitySet.Get(GetEntitySetQuery()).ToArray();
     }
 
     public TEntity Post(TEntityChanges entityChanges)
@@ -43,9 +43,10 @@ namespace CleenApi.Web.Controllers
       EntitySet.Delete(id);
     }
 
-    protected KeyValuePair<string, string>[] ParseUrlConditions()
+    protected EntitySetQuery GetEntitySetQuery()
     {
-      return Request.GetQueryNameValuePairs().ToArray();
+      KeyValuePair<string, string>[] pair = Request.GetQueryNameValuePairs().ToArray();
+      return pair.Any() ? new EntitySetQuery(pair) : null;
     }
 
     protected override void Dispose(bool disposing)
