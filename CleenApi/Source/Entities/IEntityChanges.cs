@@ -8,6 +8,6 @@ namespace CleenApi.Entities
 
     TEntity ApplyValues(CleenApiDbContext db, TEntity entity);
 
-    bool IsValid(TEntity entity);
+    bool IsValidEntity(TEntity entity);
   }
 }

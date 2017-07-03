@@ -87,23 +87,31 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Source\Entities\Implementations\Dynamics\DynamicEntityQuery.cs" />
     <Compile Include="Source\Entities\Exceptions\IEntityNotFoundException.cs" />
     <Compile Include="Source\Entities\Exceptions\IEntityProcessingException.cs" />
     <Compile Include="Source\Entities\Exceptions\InvalidConditionException.cs" />
     <Compile Include="Source\Entities\Exceptions\InvalidEntityChangesException.cs" />
     <Compile Include="Source\Entities\Exceptions\InvalidSortFieldException.cs" />
     <Compile Include="Source\Entities\Implementations\BaseEntityQuery.cs" />
+    <Compile Include="Source\Entities\Implementations\Dynamics\LinqExtensions.cs" />
+    <Compile Include="Source\Entities\Implementations\Users\DynamicUserEntitySet.cs" />
     <Compile Include="Source\Entities\Queries\EntitySetQuery.cs" />
     <Compile Include="Source\Entities\Queries\SortDirection.cs" />
     <Compile Include="Source\Web\Controllers\BaseDbEntitySetController.cs" />
     <Compile Include="Source\Entities\Exceptions\BaseEntitySetException.cs" />
     <Compile Include="Source\Entities\Exceptions\EntityNotFoundException.cs" />
     <Compile Include="Source\Entities\Exceptions\EntityProcessingException.cs" />
-    <Compile Include="Source\Web\Controllers\UserController.cs" />
-    <Compile Include="Source\Web\Controllers\WorkspaceController.cs" />
+    <Compile Include="Source\Entities\Implementations\Workspaces\DynamicWorkspaceEntitySet.cs" />
+    <Compile Include="Source\Web\Controllers\Dynamics\DynamicUserController.cs" />
+    <Compile Include="Source\Web\Controllers\Dynamics\DynamicWorkspaceController.cs" />
+    <Compile Include="Source\Web\Controllers\Statics\UserController.cs" />
+    <Compile Include="Source\Web\Controllers\Statics\WorkspaceController.cs" />
     <Compile Include="Source\Entities\Implementations\BaseDbEntitySet.cs" />
     <Compile Include="Source\Entities\IEntitySet.cs" />
     <Compile Include="Source\Entities\IEntityQuery.cs" />

@@ -3,26 +3,27 @@ using System.Web.Http;
 using CleenApi.Entities.Implementations.Users;
 using CleenApi.Entities.Implementations.Workspaces;
 
-namespace CleenApi.Web.Controllers
+namespace CleenApi.Web.Controllers.Dynamics
 {
-  public class WorkspaceController : BaseDbEntitySetController<WorkspaceEntitySet, Workspace, WorkspaceChanges>
+  public class DynamicWorkspaceController
+    : BaseDbEntitySetController<Workspace, DynamicWorkspaceEntitySet, WorkspaceChanges>
   {
     [HttpGet]
-    [Route("workspace/{workspaceId}/likes")]
+    [Route("dynamicworkspace/{workspaceId}/likes")]
     public int GetLikes(int workspaceId)
     {
       return EntitySet.GetLikes(workspaceId);
     }
 
     [HttpPost]
-    [Route("workspace/{workspaceId}/likes")]
+    [Route("dynamicworkspace/{workspaceId}/likes")]
     public int UpdateLikes(int workspaceId)
     {
       return EntitySet.UpdateLikes(workspaceId);
     }
 
     [HttpGet]
-    [Route("workspace/{workspaceId}/users")]
+    [Route("dynamicworkspace/{workspaceId}/users")]
     public User[] GetUsers(int workspaceId)
     {
       return EntitySet.GetUsersSet(workspaceId)
@@ -31,7 +32,7 @@ namespace CleenApi.Web.Controllers
     }
 
     [HttpPost]
-    [Route("workspace/{workspaceId}/users")]
+    [Route("dynamicworkspace/{workspaceId}/users")]
     public User AddUser(int workspaceId, [FromBody] UserChanges userChanges)
     {
       return EntitySet.AddUser(workspaceId, userChanges);

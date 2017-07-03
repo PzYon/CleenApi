@@ -3,6 +3,8 @@ using System.Web.Http;
 using System.Web.Http.ExceptionHandling;
 using CleenApi.Database;
 using CleenApi.Web;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 
 namespace CleenApi
 {
@@ -23,6 +25,11 @@ namespace CleenApi
       config.Services.Replace(typeof(IExceptionHandler), new CleenApiExceptionHandler());
 
       config.Formatters.Remove(config.Formatters.XmlFormatter);
+
+      config.Formatters.JsonFormatter.SerializerSettings = new JsonSerializerSettings
+        {
+          ContractResolver = new CamelCasePropertyNamesContractResolver()
+        };
     }
   }
 }

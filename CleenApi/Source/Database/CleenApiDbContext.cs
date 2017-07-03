@@ -16,6 +16,8 @@ namespace CleenApi.Database
     public CleenApiDbContext() : base("CleenApi")
     {
       Database.Log = sql => Debug.Write(sql);
+
+      Configuration.LazyLoadingEnabled = false;
     }
 
     public T AddOrUpdate<T>(T entity) where T : class, IEntity

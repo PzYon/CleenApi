@@ -21,7 +21,11 @@ namespace CleenApi.Entities.Implementations
 
     private readonly IQueryable<TEntity> entities;
 
-    protected BaseDbEntitySet(IQueryable<TEntity> entities = null)
+    protected BaseDbEntitySet()
+    {
+    }
+
+    protected BaseDbEntitySet(IQueryable<TEntity> entities)
     {
       this.entities = entities;
     }
@@ -38,9 +42,9 @@ namespace CleenApi.Entities.Implementations
       Db = db;
     }
 
-    public TEntity Get(int id)
+    public TEntity Get(int id, string[] includes = null)
     {
-      return GetById(id);
+      return GetById(id, includes);
     }
 
     public IQueryable<TEntity> Get(EntitySetQuery query = null)
@@ -67,7 +71,7 @@ namespace CleenApi.Entities.Implementations
 
       entity = entityChanges.ApplyValues(Db, entity);
 
-      if (entityChanges.IsValid(entity))
+      if (entityChanges.IsValidEntity(entity))
       {
         return Db.AddOrUpdate(entity);
       }
@@ -93,9 +97,19 @@ namespace CleenApi.Entities.Implementations
       Db.Dispose();
     }
 
-    protected TEntity GetById(int id)
+    protected TEntity GetById(int id, string[] includes = null)
     {
-      TEntity entity = Entities.FirstOrDefault(e => e.Id == id);
+      IQueryable<TEntity> queryable = Entities;
+
+      if (includes != null)
+      {
+        foreach (string include in includes)
+        {
+          queryable = queryable.Include(include);
+        }
+      }
+
+      TEntity entity = queryable.FirstOrDefault(e => e.Id == id);
       if (entity == null)
       {
         throw new EntityNotFoundException<TEntity>(id);

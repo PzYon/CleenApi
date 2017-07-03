@@ -11,6 +11,6 @@ namespace CleenApi.Entities.Implementations.Workspaces
 
     public int Likes { get; set; }
 
-    public List<User> Users { get; set; } = new List<User>();
+    public virtual List<User> Users { get; set; } = new List<User>();
   }
 }

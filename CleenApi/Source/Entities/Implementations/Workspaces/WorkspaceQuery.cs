@@ -8,7 +8,7 @@ namespace CleenApi.Entities.Implementations.Workspaces
 {
   public class WorkspaceQuery : BaseEntityQuery<Workspace>
   {
-    protected override IQueryable<Workspace> HandleConditions(IQueryable<Workspace> set,
+    protected override IQueryable<Workspace> HandleConditions(IQueryable<Workspace> queryable,
                                                               Dictionary<string, string> conditions)
     {
       foreach (KeyValuePair<string, string> condition in conditions)
@@ -19,7 +19,7 @@ namespace CleenApi.Entities.Implementations.Workspaces
         switch (fieldName)
         {
           case nameof(Workspace.Title):
-            set = set.Where(w => w.Title == value);
+            queryable = queryable.Where(w => w.Title == value);
             break;
 
           default:
@@ -27,12 +27,14 @@ namespace CleenApi.Entities.Implementations.Workspaces
         }
       }
 
-      return set;
+      return queryable;
     }
 
-    protected override IQueryable<Workspace> HandleOrderBy(IQueryable<Workspace> set,
+    protected override IQueryable<Workspace> HandleOrderBy(IQueryable<Workspace> queryable,
                                                            Dictionary<string, SortDirection> sortFields)
     {
+      var isAlreadyOrdered = false;
+
       foreach (KeyValuePair<string, SortDirection> sortField in sortFields)
       {
         string fieldName = sortField.Key;
@@ -40,38 +42,49 @@ namespace CleenApi.Entities.Implementations.Workspaces
         switch (fieldName)
         {
           case nameof(Workspace.Title):
-            set = sortField.Value == SortDirection.Ascending
-                    ? set.OrderBy(w => w.Title)
-                    : set.OrderByDescending(w => w.Title);
+            queryable = sortField.Value == SortDirection.Ascending
+                          ? (isAlreadyOrdered
+                               ? ((IOrderedQueryable<Workspace>) queryable).ThenBy(w => w.Title)
+                               : queryable.OrderBy(w => w.Title))
+                          : (isAlreadyOrdered
+                               ? ((IOrderedQueryable<Workspace>) queryable).ThenByDescending(w => w.Title)
+                               : queryable.OrderByDescending(w => w.Title));
             break;
 
           case nameof(Workspace.Likes):
-            set = sortField.Value == SortDirection.Ascending
-                    ? set.OrderBy(w => w.Likes)
-                    : set.OrderByDescending(w => w.Likes);
+            queryable = sortField.Value == SortDirection.Ascending
+                          ? (isAlreadyOrdered
+                               ? ((IOrderedQueryable<Workspace>) queryable).ThenBy(w => w.Likes)
+                               : queryable.OrderBy(w => w.Likes))
+                          : (isAlreadyOrdered
+                               ? ((IOrderedQueryable<Workspace>) queryable).ThenByDescending(w => w.Likes)
+                               : queryable.OrderByDescending(w => w.Likes));
             break;
 
           default:
             throw new InvalidSortFieldException<Workspace>(fieldName);
         }
+
+        isAlreadyOrdered = true;
       }
 
-      return set;
+      return queryable;
     }
 
-    protected override IQueryable<Workspace> HandleIncludes(IQueryable<Workspace> set, string[] propertiesToInclude)
+    protected override IQueryable<Workspace> HandleIncludes(IQueryable<Workspace> queryable,
+                                                            string[] propertiesToInclude)
     {
       foreach (string propertyToInclude in propertiesToInclude)
       {
         switch (propertyToInclude)
         {
           case nameof(Workspace.Users):
-            set = set.Include(s => s.Users);
+            queryable = queryable.Include(s => s.Users);
             break;
         }
       }
 
-      return set;
+      return queryable;
     }
   }
 }

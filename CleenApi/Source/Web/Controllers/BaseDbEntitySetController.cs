@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
@@ -8,7 +9,7 @@ using CleenApi.Entities.Queries;
 
 namespace CleenApi.Web.Controllers
 {
-  public abstract class BaseDbEntitySetController<TEntitySet, TEntity, TEntityChanges> : ApiController
+  public abstract class BaseDbEntitySetController<TEntity, TEntitySet, TEntityChanges> : ApiController
     where TEntity : class, IEntity, new()
     where TEntityChanges : class, IEntityChanges<TEntity>
     where TEntitySet : class, IEntitySet<TEntity, TEntityChanges>, new()
@@ -16,6 +17,8 @@ namespace CleenApi.Web.Controllers
     protected readonly TEntitySet EntitySet = new TEntitySet();
 
     private readonly CleenApiDbContext db = new CleenApiDbContext();
+
+    private readonly Stopwatch watch = Stopwatch.StartNew();
 
     protected EntitySetQuery EntitySetQuery
     {
@@ -35,7 +38,7 @@ namespace CleenApi.Web.Controllers
 
     public TEntity Get(int id)
     {
-      return EntitySet.Get(id);
+      return EntitySet.Get(id, EntitySetQuery?.Includes);
     }
 
     public TEntity[] Get()
@@ -57,6 +60,8 @@ namespace CleenApi.Web.Controllers
     {
       EntitySet.Dispose();
       db.Dispose();
+
+      Debug.Write("Controller lifetime: " + watch.ElapsedMilliseconds + "ms");
     }
   }
 }

@@ -35,24 +35,44 @@ namespace CleenApi.Entities.Queries
             {
               if (sortField.StartsWith("-"))
               {
-                SortFields[sortField.Substring(1)] = SortDirection.Descending;
+                SortFields[ToUpperCamelCase(sortField.Substring(1))] = SortDirection.Descending;
               }
               else
               {
-                SortFields[sortField] = SortDirection.Ascending;
+                SortFields[ToUpperCamelCase(sortField)] = SortDirection.Ascending;
               }
             }
             break;
 
           case "$select":
-            Includes = pair.Value.Split(',').Select(v => v.Trim()).ToArray();
+            Includes = pair.Value
+                           .Split(',')
+                           .Select(v => v.Trim())
+                           .Select(ToUpperCamelCase)
+                           .ToArray();
             break;
 
           default:
-            Conditions[pair.Key] = pair.Value;
+            Conditions[ToUpperCamelCase(pair.Key)] = pair.Value;
             break;
         }
       }
+    }
+
+    private string ToUpperCamelCase(string value)
+    {
+      if (string.IsNullOrEmpty(value))
+      {
+        return value;
+      }
+
+      char firstChar = value[0];
+      if (char.IsUpper(firstChar))
+      {
+        return value;
+      }
+
+      return char.ToUpper(firstChar) + value.Substring(1);
     }
   }
 }

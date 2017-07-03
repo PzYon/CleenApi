@@ -11,7 +11,7 @@ namespace CleenApi.Entities
   {
     void SetDb(CleenApiDbContext db);
 
-    TEntity Get(int id);
+    TEntity Get(int id, string[] includes = null);
 
     IQueryable<TEntity> Get(EntitySetQuery query);
 
