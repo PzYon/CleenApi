@@ -17,6 +17,8 @@ namespace CleenApi.Entities.Implementations
 
     protected DbSet<TEntity> DbSet => Db.Set<TEntity>();
 
+    protected TEntityQuery EntityQuery => new TEntityQuery();
+
     protected IQueryable<TEntity> Entities => entities ?? DbSet;
 
     private readonly IQueryable<TEntity> entities;
@@ -49,10 +51,10 @@ namespace CleenApi.Entities.Implementations
 
     public IQueryable<TEntity> Get(EntitySetQuery query = null)
     {
-      IQueryable<TEntity> queryable = Entities.AsQueryable();
+      IQueryable<TEntity> queryable = Entities;
 
       return query != null
-               ? new TEntityQuery().Build(queryable, query)
+               ? EntityQuery.Build(queryable, query)
                : queryable;
     }
 
@@ -83,7 +85,7 @@ namespace CleenApi.Entities.Implementations
     {
       try
       {
-        DbSet.Remove(DbSet.Attach(new TEntity {Id = id}));
+        DbSet.Remove(GetById(id));
         Db.SaveChanges();
       }
       catch (DbUpdateConcurrencyException)
@@ -99,14 +101,11 @@ namespace CleenApi.Entities.Implementations
 
     protected TEntity GetById(int id, string[] includes = null)
     {
-      IQueryable<TEntity> queryable = Entities;
+      IQueryable<TEntity> queryable = EntityQuery.ApplyDefaults(Entities);
 
       if (includes != null)
       {
-        foreach (string include in includes)
-        {
-          queryable = queryable.Include(include);
-        }
+        queryable = EntityQuery.ApplyIncludes(queryable, includes);
       }
 
       TEntity entity = queryable.FirstOrDefault(e => e.Id == id);

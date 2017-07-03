@@ -6,17 +6,30 @@ namespace CleenApi.Entities.Implementations
 {
   public abstract class BaseEntityQuery<TEntity> : IEntityQuery<TEntity> where TEntity : class, IEntity
   {
-    protected abstract IQueryable<TEntity> HandleIncludes(IQueryable<TEntity> queryable,
-                                                          string[] propertiesToInclude);
+    public abstract IQueryable<TEntity> ApplyIncludes(IQueryable<TEntity> queryable,
+                                                      string[] propertiesToInclude);
 
-    protected abstract IQueryable<TEntity> HandleConditions(IQueryable<TEntity> queryable,
-                                                            Dictionary<string, string> conditions);
+    protected abstract IQueryable<TEntity> ApplyConditions(IQueryable<TEntity> queryable,
+                                                           Dictionary<string, string> conditions);
 
-    protected abstract IQueryable<TEntity> HandleOrderBy(IQueryable<TEntity> queryable,
-                                                         Dictionary<string, SortDirection> sortFields);
+    protected abstract IQueryable<TEntity> ApplyOrderBy(IQueryable<TEntity> queryable,
+                                                        Dictionary<string, SortDirection> sortFields);
+
+    public virtual IQueryable<TEntity> ApplyDefaults(IQueryable<TEntity> queryable)
+    {
+      // do nothing by default. this could be used for conditions which are use for each
+      // data access, e.g. permissions check
+      return queryable;
+    }
 
     public IQueryable<TEntity> Build(IQueryable<TEntity> queryable, EntitySetQuery query)
     {
+      queryable = ApplyDefaults(queryable);
+
+      queryable = ApplyIncludes(queryable, query.Includes);
+      queryable = ApplyConditions(queryable, query.Conditions);
+      queryable = ApplyOrderBy(queryable, query.SortFields);
+
       if (query.Skip > 0)
       {
         queryable = queryable.Skip(query.Skip);
@@ -26,10 +39,6 @@ namespace CleenApi.Entities.Implementations
       {
         queryable = queryable.Take(query.Take);
       }
-
-      queryable = HandleIncludes(queryable, query.Includes);
-      queryable = HandleConditions(queryable, query.Conditions);
-      queryable = HandleOrderBy(queryable, query.SortFields);
 
       return queryable;
     }

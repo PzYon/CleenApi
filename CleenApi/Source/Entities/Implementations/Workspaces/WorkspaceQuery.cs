@@ -8,8 +8,29 @@ namespace CleenApi.Entities.Implementations.Workspaces
 {
   public class WorkspaceQuery : BaseEntityQuery<Workspace>
   {
-    protected override IQueryable<Workspace> HandleConditions(IQueryable<Workspace> queryable,
-                                                              Dictionary<string, string> conditions)
+    public override IQueryable<Workspace> ApplyDefaults(IQueryable<Workspace> queryable)
+    {
+      return queryable.Where(w => w.Id > 0);
+    }
+
+    public override IQueryable<Workspace> ApplyIncludes(IQueryable<Workspace> queryable,
+                                                        string[] propertiesToInclude)
+    {
+      foreach (string propertyToInclude in propertiesToInclude)
+      {
+        switch (propertyToInclude)
+        {
+          case nameof(Workspace.Users):
+            queryable = queryable.Include(s => s.Users);
+            break;
+        }
+      }
+
+      return queryable;
+    }
+
+    protected override IQueryable<Workspace> ApplyConditions(IQueryable<Workspace> queryable,
+                                                             Dictionary<string, string> conditions)
     {
       foreach (KeyValuePair<string, string> condition in conditions)
       {
@@ -30,8 +51,8 @@ namespace CleenApi.Entities.Implementations.Workspaces
       return queryable;
     }
 
-    protected override IQueryable<Workspace> HandleOrderBy(IQueryable<Workspace> queryable,
-                                                           Dictionary<string, SortDirection> sortFields)
+    protected override IQueryable<Workspace> ApplyOrderBy(IQueryable<Workspace> queryable,
+                                                          Dictionary<string, SortDirection> sortFields)
     {
       var isAlreadyOrdered = false;
 
@@ -66,22 +87,6 @@ namespace CleenApi.Entities.Implementations.Workspaces
         }
 
         isAlreadyOrdered = true;
-      }
-
-      return queryable;
-    }
-
-    protected override IQueryable<Workspace> HandleIncludes(IQueryable<Workspace> queryable,
-                                                            string[] propertiesToInclude)
-    {
-      foreach (string propertyToInclude in propertiesToInclude)
-      {
-        switch (propertyToInclude)
-        {
-          case nameof(Workspace.Users):
-            queryable = queryable.Include(s => s.Users);
-            break;
-        }
       }
 
       return queryable;

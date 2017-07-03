@@ -7,8 +7,13 @@ namespace CleenApi.Entities.Implementations.Users
 {
   public class UserQuery : BaseEntityQuery<User>
   {
-    protected override IQueryable<User> HandleConditions(IQueryable<User> queryable,
-                                                         Dictionary<string, string> conditions)
+    public override IQueryable<User> ApplyIncludes(IQueryable<User> queryable, string[] propertiesToInclude)
+    {
+      return queryable;
+    }
+
+    protected override IQueryable<User> ApplyConditions(IQueryable<User> queryable,
+                                                        Dictionary<string, string> conditions)
     {
       foreach (KeyValuePair<string, string> condition in conditions)
       {
@@ -33,8 +38,8 @@ namespace CleenApi.Entities.Implementations.Users
       return queryable;
     }
 
-    protected override IQueryable<User> HandleOrderBy(IQueryable<User> queryable,
-                                                      Dictionary<string, SortDirection> sortFields)
+    protected override IQueryable<User> ApplyOrderBy(IQueryable<User> queryable,
+                                                     Dictionary<string, SortDirection> sortFields)
     {
       var isAlreadyOrdered = false;
 
@@ -71,11 +76,6 @@ namespace CleenApi.Entities.Implementations.Users
         isAlreadyOrdered = true;
       }
 
-      return queryable;
-    }
-
-    protected override IQueryable<User> HandleIncludes(IQueryable<User> queryable, string[] propertiesToInclude)
-    {
       return queryable;
     }
   }
