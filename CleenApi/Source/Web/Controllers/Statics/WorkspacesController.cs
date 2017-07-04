@@ -8,21 +8,21 @@ namespace CleenApi.Web.Controllers.Statics
   public class WorkspacesController : BaseDbEntitySetController<Workspace, WorkspaceEntitySet, WorkspaceChanges>
   {
     [HttpGet]
-    [Route("workspace/{workspaceId}/likes")]
+    [Route("workspaces/{workspaceId}/likes")]
     public int GetLikes(int workspaceId)
     {
       return EntitySet.GetLikes(workspaceId);
     }
 
     [HttpPost]
-    [Route("workspace/{workspaceId}/likes")]
+    [Route("workspaces/{workspaceId}/likes")]
     public int UpdateLikes(int workspaceId)
     {
       return EntitySet.UpdateLikes(workspaceId);
     }
 
     [HttpGet]
-    [Route("workspace/{workspaceId}/users")]
+    [Route("workspaces/{workspaceId}/users")]
     public User[] GetUsers(int workspaceId)
     {
       return EntitySet.GetUsersSet(workspaceId)
@@ -31,7 +31,7 @@ namespace CleenApi.Web.Controllers.Statics
     }
 
     [HttpPost]
-    [Route("workspace/{workspaceId}/users")]
+    [Route("workspaces/{workspaceId}/users")]
     public User AddUser(int workspaceId, [FromBody] UserChanges userChanges)
     {
       return EntitySet.AddUser(workspaceId, userChanges);

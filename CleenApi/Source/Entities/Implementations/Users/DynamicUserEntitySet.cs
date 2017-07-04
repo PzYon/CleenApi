@@ -19,11 +19,8 @@ namespace CleenApi.Entities.Implementations.Users
 
     public DynamicLocationEntitySet GetLocationsSet(int userId)
     {
-      // note: SelectMany is a hack to prevent an execution but still return only the users of the workspace
-      return new DynamicLocationEntitySet(Db,
-                                          Get().Where(u => u.Id == userId)
-                                               .Take(1)
-                                               .SelectMany(u => u.Locations));
+      IQueryable<Location> locations = GetByIdQuerable(userId).SelectMany(u => u.Locations);
+      return new DynamicLocationEntitySet(Db, locations);
     }
   }
 }

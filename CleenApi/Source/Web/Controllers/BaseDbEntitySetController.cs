@@ -11,8 +11,8 @@ namespace CleenApi.Web.Controllers
 {
   public abstract class BaseDbEntitySetController<TEntity, TEntitySet, TEntityChanges> : ApiController
     where TEntity : class, IEntity, new()
-    where TEntityChanges : class, IEntityChanges<TEntity>
     where TEntitySet : class, IEntitySet<TEntity, TEntityChanges>, new()
+    where TEntityChanges : class, IEntityChanges<TEntity>
   {
     protected readonly TEntitySet EntitySet = new TEntitySet();
 

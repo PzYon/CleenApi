@@ -13,14 +13,14 @@ namespace CleenApi.Entities.Implementations
     where TEntityChanges : class, IEntityChanges<TEntity>
     where TEntityQuery : class, IEntityQuery<TEntity>, new()
   {
-    protected CleenApiDbContext Db { get; private set; }
+    protected CleenApiDbContext Db => GetDb();
+    private CleenApiDbContext db;
 
     protected DbSet<TEntity> DbSet => Db.Set<TEntity>();
 
     protected TEntityQuery EntityQuery => new TEntityQuery();
 
     protected IQueryable<TEntity> Entities => entities ?? DbSet;
-
     private readonly IQueryable<TEntity> entities;
 
     protected BaseDbEntitySet()
@@ -34,19 +34,34 @@ namespace CleenApi.Entities.Implementations
 
     // hack: Db needs to be set via an interface method as generics don't support
     // new() constraint with constructor parameters.
-    public void SetDb(CleenApiDbContext db)
+    public void SetDb(CleenApiDbContext database)
     {
-      if (Db != null)
+      if (db != null)
       {
         throw new ArgumentException("Cannot set DB as DB is already set.");
       }
 
-      Db = db;
+      db = database;
+    }
+
+    private CleenApiDbContext GetDb()
+    {
+      if (db == null)
+      {
+        throw new Exception($"Database has not been set. Use {nameof(SetDb)}() to do so.");
+      }
+
+      return db;
     }
 
     public TEntity Get(int id, string[] includes = null)
     {
       return GetById(id, includes);
+    }
+
+    public IQueryable<TEntity> GetByIdQuerable(int id)
+    {
+      return Get().Where(e => e.Id == id).Take(1);
     }
 
     public IQueryable<TEntity> Get(EntitySetQuery query = null)
@@ -73,25 +88,18 @@ namespace CleenApi.Entities.Implementations
 
       entity = entityChanges.ApplyValues(Db, entity);
 
-      if (entityChanges.IsValidEntity(entity))
+      if (!entityChanges.IsValidEntity(entity))
       {
-        return Db.AddOrUpdate(entity);
+        throw new InvalidEntityChangesException<TEntity>(entityChanges.Id);
       }
 
-      throw new InvalidEntityChangesException<TEntity>(entityChanges.Id);
+      return Db.AddOrUpdate(entity);
     }
 
     public void Delete(int id)
     {
-      try
-      {
-        DbSet.Remove(GetById(id));
-        Db.SaveChanges();
-      }
-      catch (DbUpdateConcurrencyException)
-      {
-        throw new EntityNotFoundException<TEntity>(id);
-      }
+      DbSet.Remove(GetById(id));
+      Db.SaveChanges();
     }
 
     public void Dispose()
@@ -108,7 +116,7 @@ namespace CleenApi.Entities.Implementations
         queryable = EntityQuery.ApplyIncludes(queryable, includes);
       }
 
-      TEntity entity = queryable.FirstOrDefault(e => e.Id == id);
+      TEntity entity = queryable.SingleOrDefault(e => e.Id == id);
       if (entity == null)
       {
         throw new EntityNotFoundException<TEntity>(id);

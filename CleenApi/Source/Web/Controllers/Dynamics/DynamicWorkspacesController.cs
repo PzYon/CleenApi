@@ -24,7 +24,7 @@ namespace CleenApi.Web.Controllers.Dynamics
     }
 
     [HttpGet]
-    [Route("dynamicworkspace/{workspaceId}/users")]
+    [Route("dynamicworkspaces/{workspaceId}/users")]
     public User[] GetUsers(int workspaceId)
     {
       return EntitySet.GetUsersSet(workspaceId)
@@ -33,14 +33,14 @@ namespace CleenApi.Web.Controllers.Dynamics
     }
 
     [HttpPost]
-    [Route("dynamicworkspace/{workspaceId}/users")]
+    [Route("dynamicworkspaces/{workspaceId}/users")]
     public User AddUser(int workspaceId, [FromBody] UserChanges userChanges)
     {
       return EntitySet.AddUser(workspaceId, userChanges);
     }
 
     [HttpGet]
-    [Route("dynamicworkspace/{workspaceId}/locations")]
+    [Route("dynamicworkspaces/{workspaceId}/locations")]
     public Location[] GetLocations(int workspaceId)
     {
       return EntitySet.GetLocationsSet(workspaceId)
@@ -49,7 +49,7 @@ namespace CleenApi.Web.Controllers.Dynamics
     }
 
     [HttpGet]
-    [Route("dynamicworkspace/{workspaceId}/users/{userId}/locations")]
+    [Route("dynamicworkspaces/{workspaceId}/users/{userId}/locations")]
     public Location[] GetLocationsFromUser(int workspaceId, int userId)
     {
       return EntitySet.GetUsersSet(workspaceId)

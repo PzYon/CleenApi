@@ -36,20 +36,14 @@ namespace CleenApi.Entities.Implementations.Workspaces
 
     public DynamicUserEntitySet GetUsersSet(int workspaceId)
     {
-      // note: SelectMany is a hack to prevent an execution but still return only the users of the workspace
-      return new DynamicUserEntitySet(Db,
-                                      Get().Where(w => w.Id == workspaceId)
-                                           .Take(1)
-                                           .SelectMany(w => w.Users));
+      IQueryable<User> users = GetByIdQuerable(workspaceId).SelectMany(w => w.Users);
+      return new DynamicUserEntitySet(Db, users);
     }
 
     public DynamicLocationEntitySet GetLocationsSet(int workspaceId)
     {
-      // note: SelectMany is a hack to prevent an execution but still return only the users of the workspace
-      return new DynamicLocationEntitySet(Db,
-                                          Get().Where(w => w.Id == workspaceId)
-                                               .Take(1)
-                                               .SelectMany(w => w.Locations));
+      IQueryable<Location> locations = GetByIdQuerable(workspaceId).SelectMany(w => w.Locations);
+      return new DynamicLocationEntitySet(Db, locations);
     }
   }
 }
