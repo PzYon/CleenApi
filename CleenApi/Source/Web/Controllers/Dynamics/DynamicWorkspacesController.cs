@@ -1,11 +1,12 @@
 ﻿using System.Linq;
 using System.Web.Http;
+using CleenApi.Entities.Implementations.Locations;
 using CleenApi.Entities.Implementations.Users;
 using CleenApi.Entities.Implementations.Workspaces;
 
 namespace CleenApi.Web.Controllers.Dynamics
 {
-  public class DynamicWorkspaceController
+  public class DynamicWorkspacesController
     : BaseDbEntitySetController<Workspace, DynamicWorkspaceEntitySet, WorkspaceChanges>
   {
     [HttpGet]
@@ -36,6 +37,25 @@ namespace CleenApi.Web.Controllers.Dynamics
     public User AddUser(int workspaceId, [FromBody] UserChanges userChanges)
     {
       return EntitySet.AddUser(workspaceId, userChanges);
+    }
+
+    [HttpGet]
+    [Route("dynamicworkspace/{workspaceId}/locations")]
+    public Location[] GetLocations(int workspaceId)
+    {
+      return EntitySet.GetLocationsSet(workspaceId)
+                      .Get(EntitySetQuery)
+                      .ToArray();
+    }
+
+    [HttpGet]
+    [Route("dynamicworkspace/{workspaceId}/users/{userId}/locations")]
+    public Location[] GetLocationsFromUser(int workspaceId, int userId)
+    {
+      return EntitySet.GetUsersSet(workspaceId)
+                      .GetLocationsSet(userId)
+                      .Get(EntitySetQuery)
+                      .ToArray();
     }
   }
 }

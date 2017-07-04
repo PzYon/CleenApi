@@ -1,5 +1,6 @@
 using System.Linq;
 using CleenApi.Entities.Implementations.Dynamics;
+using CleenApi.Entities.Implementations.Locations;
 using CleenApi.Entities.Implementations.Users;
 
 namespace CleenApi.Entities.Implementations.Workspaces
@@ -40,6 +41,15 @@ namespace CleenApi.Entities.Implementations.Workspaces
                                       Get().Where(w => w.Id == workspaceId)
                                            .Take(1)
                                            .SelectMany(w => w.Users));
+    }
+
+    public DynamicLocationEntitySet GetLocationsSet(int workspaceId)
+    {
+      // note: SelectMany is a hack to prevent an execution but still return only the users of the workspace
+      return new DynamicLocationEntitySet(Db,
+                                          Get().Where(w => w.Id == workspaceId)
+                                               .Take(1)
+                                               .SelectMany(w => w.Locations));
     }
   }
 }

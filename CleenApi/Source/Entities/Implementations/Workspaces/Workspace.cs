@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using CleenApi.Entities.Implementations.Locations;
 using CleenApi.Entities.Implementations.Users;
 
 namespace CleenApi.Entities.Implementations.Workspaces
@@ -12,5 +13,7 @@ namespace CleenApi.Entities.Implementations.Workspaces
     public int Likes { get; set; }
 
     public virtual List<User> Users { get; set; } = new List<User>();
+
+    public virtual List<Location> Locations { get; set; } = new List<Location>();
   }
 }

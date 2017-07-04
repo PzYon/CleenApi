@@ -2,7 +2,7 @@
 
 namespace CleenApi.Web.Controllers.Statics
 {
-  public class UserController : BaseDbEntitySetController<User, UserEntitySet, UserChanges>
+  public class UsersController : BaseDbEntitySetController<User, UserEntitySet, UserChanges>
   {
   }
 }

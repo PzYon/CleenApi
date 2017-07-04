@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using CleenApi.Entities;
+using CleenApi.Entities.Implementations.Locations;
 using CleenApi.Entities.Implementations.Users;
 using CleenApi.Entities.Implementations.Workspaces;
 
@@ -12,6 +13,8 @@ namespace CleenApi.Database
     public DbSet<Workspace> Workspaces { get; set; }
 
     public DbSet<User> Users { get; set; }
+
+    public DbSet<Location> Locations { get; set; }
 
     public CleenApiDbContext() : base("CleenApi")
     {

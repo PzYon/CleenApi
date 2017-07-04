@@ -2,7 +2,7 @@
 
 namespace CleenApi.Web.Controllers.Dynamics
 {
-  public class DynamicUserController
+  public class DynamicUsersController
     : BaseDbEntitySetController<User, DynamicUserEntitySet, UserChanges>
   {
   }

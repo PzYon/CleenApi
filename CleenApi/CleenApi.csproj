@@ -100,6 +100,10 @@
     <Compile Include="Source\Entities\Exceptions\InvalidSortFieldException.cs" />
     <Compile Include="Source\Entities\Implementations\BaseEntityQuery.cs" />
     <Compile Include="Source\Entities\Implementations\Dynamics\LinqExtensions.cs" />
+    <Compile Include="Source\Entities\Implementations\Locations\DynamicLocationEntitySet.cs" />
+    <Compile Include="Source\Entities\Implementations\Locations\Location.cs" />
+    <Compile Include="Source\Entities\Implementations\Locations\LocationChanges.cs" />
+    <Compile Include="Source\Entities\Implementations\Locations\LocationQuery.cs" />
     <Compile Include="Source\Entities\Implementations\Users\DynamicUserEntitySet.cs" />
     <Compile Include="Source\Entities\Queries\EntitySetQuery.cs" />
     <Compile Include="Source\Entities\Queries\SortDirection.cs" />
@@ -108,10 +112,11 @@
     <Compile Include="Source\Entities\Exceptions\EntityNotFoundException.cs" />
     <Compile Include="Source\Entities\Exceptions\EntityProcessingException.cs" />
     <Compile Include="Source\Entities\Implementations\Workspaces\DynamicWorkspaceEntitySet.cs" />
-    <Compile Include="Source\Web\Controllers\Dynamics\DynamicUserController.cs" />
-    <Compile Include="Source\Web\Controllers\Dynamics\DynamicWorkspaceController.cs" />
-    <Compile Include="Source\Web\Controllers\Statics\UserController.cs" />
-    <Compile Include="Source\Web\Controllers\Statics\WorkspaceController.cs" />
+    <Compile Include="Source\Web\Controllers\Dynamics\DynamicLocationsController.cs" />
+    <Compile Include="Source\Web\Controllers\Dynamics\DynamicUsersController.cs" />
+    <Compile Include="Source\Web\Controllers\Dynamics\DynamicWorkspacesController.cs" />
+    <Compile Include="Source\Web\Controllers\Statics\UsersController.cs" />
+    <Compile Include="Source\Web\Controllers\Statics\WorkspacesController.cs" />
     <Compile Include="Source\Entities\Implementations\BaseDbEntitySet.cs" />
     <Compile Include="Source\Entities\IEntitySet.cs" />
     <Compile Include="Source\Entities\IEntityQuery.cs" />
