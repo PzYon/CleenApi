@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Web.Http;
+using CleenApi.Entities.Implementations.Dynamics;
 using CleenApi.Entities.Implementations.Locations;
 using CleenApi.Entities.Implementations.Users;
 using CleenApi.Entities.Implementations.Workspaces;
@@ -7,7 +8,7 @@ using CleenApi.Entities.Implementations.Workspaces;
 namespace CleenApi.Web.Controllers.Dynamics
 {
   public class DynamicWorkspacesController
-    : BaseDbEntitySetController<Workspace, DynamicWorkspaceEntitySet, WorkspaceChanges>
+    : BaseDbEntitySetController<Workspace, DynamicWorkspaceEntitySet, WorkspaceChanges, DynamicEntityQuery<Workspace>>
   {
     [HttpGet]
     [Route("dynamicworkspace/{workspaceId}/likes")]

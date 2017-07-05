@@ -112,6 +112,7 @@
     <Compile Include="Source\Entities\Exceptions\EntityNotFoundException.cs" />
     <Compile Include="Source\Entities\Exceptions\EntityProcessingException.cs" />
     <Compile Include="Source\Entities\Implementations\Workspaces\DynamicWorkspaceEntitySet.cs" />
+    <Compile Include="Source\Web\Controllers\BaseEntitySetController.cs" />
     <Compile Include="Source\Web\Controllers\Dynamics\DynamicLocationsController.cs" />
     <Compile Include="Source\Web\Controllers\Dynamics\DynamicUsersController.cs" />
     <Compile Include="Source\Web\Controllers\Dynamics\DynamicWorkspacesController.cs" />

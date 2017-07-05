@@ -1,59 +1,21 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Net.Http;
-using System.Web.Http;
-using CleenApi.Database;
+﻿using CleenApi.Database;
 using CleenApi.Entities;
-using CleenApi.Entities.Queries;
+using CleenApi.Entities.Implementations;
 
 namespace CleenApi.Web.Controllers
 {
-  public abstract class BaseDbEntitySetController<TEntity, TEntitySet, TEntityChanges> : ApiController
+  public abstract class BaseDbEntitySetController<TEntity, TEntitySet, TEntityChanges, TEntityQuery>
+    : BaseEntitySetController<TEntity, TEntitySet, TEntityChanges>
     where TEntity : class, IEntity, new()
-    where TEntitySet : class, IEntitySet<TEntity, TEntityChanges>, new()
+    where TEntitySet : BaseDbEntitySet<TEntity, TEntityChanges, TEntityQuery>, new()
     where TEntityChanges : class, IEntityChanges<TEntity>
+    where TEntityQuery : class, IEntityQuery<TEntity>, new()
   {
-    protected readonly TEntitySet EntitySet = new TEntitySet();
-
     private readonly CleenApiDbContext db = new CleenApiDbContext();
-
-    private readonly Stopwatch watch = Stopwatch.StartNew();
-
-    protected EntitySetQuery EntitySetQuery
-    {
-      get
-      {
-        KeyValuePair<string, string>[] pairs = Request.GetQueryNameValuePairs().ToArray();
-        return pairs.Any()
-                 ? new EntitySetQuery(pairs)
-                 : null;
-      }
-    }
 
     protected BaseDbEntitySetController()
     {
       EntitySet.SetDb(db);
-    }
-
-    public TEntity Get(int id)
-    {
-      return EntitySet.Get(id, EntitySetQuery?.Includes);
-    }
-
-    public TEntity[] Get()
-    {
-      return EntitySet.Get(EntitySetQuery).ToArray();
-    }
-
-    public TEntity Post(TEntityChanges entityChanges)
-    {
-      return EntitySet.Update(entityChanges);
-    }
-
-    public void Delete(int id)
-    {
-      EntitySet.Delete(id);
     }
 
     protected override void Dispose(bool disposing)
@@ -61,7 +23,7 @@ namespace CleenApi.Web.Controllers
       EntitySet.Dispose();
       db.Dispose();
 
-      Debug.Write("Controller lifetime: " + watch.ElapsedMilliseconds + "ms");
+      base.Dispose(disposing);
     }
   }
 }

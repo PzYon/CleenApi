@@ -5,7 +5,8 @@ using CleenApi.Entities.Implementations.Workspaces;
 
 namespace CleenApi.Web.Controllers.Statics
 {
-  public class WorkspacesController : BaseDbEntitySetController<Workspace, WorkspaceEntitySet, WorkspaceChanges>
+  public class WorkspacesController
+    : BaseDbEntitySetController<Workspace, WorkspaceEntitySet, WorkspaceChanges, WorkspaceQuery>
   {
     [HttpGet]
     [Route("workspaces/{workspaceId}/likes")]
