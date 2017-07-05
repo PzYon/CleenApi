@@ -2,9 +2,8 @@
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using CleenApi.Entities.Queries;
 
-namespace CleenApi.Entities.Implementations.Dynamics
+namespace CleenApi.Entities.Queries.Builder
 {
   public static class LinqExtensions
   {

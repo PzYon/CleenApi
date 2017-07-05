@@ -1,4 +1,6 @@
-﻿namespace CleenApi.Entities.Exceptions
+﻿using CleenApi.Entities;
+
+namespace CleenApi.Exceptions
 {
   public class EntityNotFoundException<TEntity> : BaseEntitySetException<TEntity>, IEntityNotFoundException
     where TEntity : IEntity

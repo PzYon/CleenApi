@@ -1,6 +1,7 @@
 ﻿using System;
+using CleenApi.Entities;
 
-namespace CleenApi.Entities.Exceptions
+namespace CleenApi.Exceptions
 {
   public class BaseEntitySetException<TEntity> : Exception
     where TEntity : IEntity

@@ -2,32 +2,34 @@ using System;
 using System.Data.Entity;
 using System.Linq;
 using CleenApi.Database;
-using CleenApi.Entities.Exceptions;
 using CleenApi.Entities.Queries;
+using CleenApi.Entities.Queries.Builder;
+using CleenApi.Exceptions;
 
 namespace CleenApi.Entities.Implementations
 {
-  public abstract class BaseDbEntitySet<TEntity, TEntityChanges, TEntityQuery> : IEntitySet<TEntity, TEntityChanges>
-    where TEntity : class, IEntity, new()
-    where TEntityChanges : class, IEntityChanges<TEntity>
-    where TEntityQuery : class, IEntityQuery<TEntity>, new()
+  public class DbEntitySet<TEntity, TEntityChanges, TEntityQueryBuilder> : IEntitySet<TEntity, TEntityChanges>
+    where TEntity : class, IEntity
+    where TEntityChanges : IEntityChanges<TEntity>
+    where TEntityQueryBuilder : class, IEntityQueryBuilder<TEntity>, new()
   {
     protected CleenApiDbContext Db => GetDb();
     private CleenApiDbContext db;
 
     protected DbSet<TEntity> DbSet => Db.Set<TEntity>();
 
-    protected TEntityQuery EntityQuery => new TEntityQuery();
+    protected TEntityQueryBuilder EntityQuery => new TEntityQueryBuilder();
 
     protected IQueryable<TEntity> Entities => entities ?? DbSet;
     private readonly IQueryable<TEntity> entities;
 
-    protected BaseDbEntitySet()
+    public DbEntitySet()
     {
     }
 
-    protected BaseDbEntitySet(IQueryable<TEntity> entities)
+    public DbEntitySet(CleenApiDbContext db, IQueryable<TEntity> entities)
     {
+      this.db = db;
       this.entities = entities;
     }
 
@@ -55,12 +57,20 @@ namespace CleenApi.Entities.Implementations
 
     public TEntity Get(int id, string[] includes = null)
     {
-      return GetById(id, includes);
-    }
+      IQueryable<TEntity> queryable = EntityQuery.ApplyDefaults(Entities);
 
-    public IQueryable<TEntity> GetByIdQuerable(int id)
-    {
-      return Get().Where(e => e.Id == id).Take(1);
+      if (includes != null)
+      {
+        queryable = EntityQuery.ApplyIncludes(queryable, includes);
+      }
+
+      TEntity entity = queryable.SingleOrDefault(e => e.Id == id);
+      if (entity == null)
+      {
+        throw new EntityNotFoundException<TEntity>(id);
+      }
+
+      return entity;
     }
 
     public IQueryable<TEntity> Get(EntitySetQuery query = null)
@@ -82,7 +92,7 @@ namespace CleenApi.Entities.Implementations
       bool isNew = entityChanges.Id.HasValue && entityChanges.Id.Value > 0;
 
       TEntity entity = isNew
-                         ? GetById(entityChanges.Id.Value)
+                         ? Get(entityChanges.Id.Value)
                          : DbSet.Create();
 
       entity = entityChanges.ApplyValues(Db, entity);
@@ -97,31 +107,18 @@ namespace CleenApi.Entities.Implementations
 
     public void Delete(int id)
     {
-      DbSet.Remove(GetById(id));
+      DbSet.Remove(Get(id));
       Db.SaveChanges();
     }
 
     public void Dispose()
     {
-      Db.Dispose();
+      Db?.Dispose();
     }
 
-    protected TEntity GetById(int id, string[] includes = null)
+    protected IQueryable<TEntity> GetByIdQuerable(int id)
     {
-      IQueryable<TEntity> queryable = EntityQuery.ApplyDefaults(Entities);
-
-      if (includes != null)
-      {
-        queryable = EntityQuery.ApplyIncludes(queryable, includes);
-      }
-
-      TEntity entity = queryable.SingleOrDefault(e => e.Id == id);
-      if (entity == null)
-      {
-        throw new EntityNotFoundException<TEntity>(id);
-      }
-
-      return entity;
+      return Get().Where(e => e.Id == id).Take(1);
     }
   }
 }

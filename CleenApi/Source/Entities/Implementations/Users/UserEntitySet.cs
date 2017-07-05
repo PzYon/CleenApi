@@ -1,17 +1,25 @@
-﻿using System.Linq;
+using System.Linq;
 using CleenApi.Database;
+using CleenApi.Entities.Implementations.Locations;
+using CleenApi.Entities.Queries.Builder;
 
 namespace CleenApi.Entities.Implementations.Users
 {
-  public class UserEntitySet : BaseDbEntitySet<User, UserChanges, UserQuery>
+  public class UserEntitySet
+    : DbEntitySet<User, UserChanges, EntityQueryBuilder<User>>
   {
     public UserEntitySet()
     {
     }
 
-    public UserEntitySet(CleenApiDbContext db, IQueryable<User> users) : base(users)
+    public UserEntitySet(CleenApiDbContext db, IQueryable<User> queryable) : base(db, queryable)
     {
-      SetDb(db);
+    }
+
+    public LocationEntitySet GetLocationsSet(int userId)
+    {
+      IQueryable<Location> locations = GetByIdQuerable(userId).SelectMany(u => u.Locations);
+      return new LocationEntitySet(Db, locations);
     }
   }
 }

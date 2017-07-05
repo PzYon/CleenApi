@@ -1,4 +1,4 @@
-namespace CleenApi.Entities.Exceptions
+namespace CleenApi.Exceptions
 {
   public interface IEntityNotFoundException
   {

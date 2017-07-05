@@ -1,4 +1,6 @@
-﻿namespace CleenApi.Entities.Exceptions
+﻿using CleenApi.Entities;
+
+namespace CleenApi.Exceptions
 {
   public class InvalidEntityChangesException<TEntity> : EntityProcessingException<TEntity>
     where TEntity : IEntity

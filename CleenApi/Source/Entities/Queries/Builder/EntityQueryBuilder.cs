@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using CleenApi.Entities.Queries;
 
-namespace CleenApi.Entities.Implementations.Dynamics
+namespace CleenApi.Entities.Queries.Builder
 {
-  public class DynamicEntityQuery<TEntity> : BaseEntityQuery<TEntity>
-    where TEntity : class, IEntity
+  public class EntityQueryBuilder<TEntity> : BaseEntityQueryBuilder<TEntity>
+    where TEntity : IEntity
   {
     public override IQueryable<TEntity> ApplyIncludes(IQueryable<TEntity> queryable,
                                                       string[] includes)

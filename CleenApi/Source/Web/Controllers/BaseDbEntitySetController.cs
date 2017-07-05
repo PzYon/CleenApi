@@ -1,15 +1,16 @@
 ﻿using CleenApi.Database;
 using CleenApi.Entities;
 using CleenApi.Entities.Implementations;
+using CleenApi.Entities.Queries.Builder;
 
 namespace CleenApi.Web.Controllers
 {
-  public abstract class BaseDbEntitySetController<TEntity, TEntitySet, TEntityChanges, TEntityQuery>
+  public abstract class BaseDbEntitySetController<TEntity, TEntitySet, TEntityChanges, TEntityQueryBuilder>
     : BaseEntitySetController<TEntity, TEntitySet, TEntityChanges>
-    where TEntity : class, IEntity, new()
-    where TEntitySet : BaseDbEntitySet<TEntity, TEntityChanges, TEntityQuery>, new()
-    where TEntityChanges : class, IEntityChanges<TEntity>
-    where TEntityQuery : class, IEntityQuery<TEntity>, new()
+    where TEntity : class, IEntity
+    where TEntitySet : DbEntitySet<TEntity, TEntityChanges, TEntityQueryBuilder>, new()
+    where TEntityChanges : IEntityChanges<TEntity>
+    where TEntityQueryBuilder : class, IEntityQueryBuilder<TEntity>, new()
   {
     private readonly CleenApiDbContext db = new CleenApiDbContext();
 

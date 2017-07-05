@@ -2,7 +2,7 @@ using CleenApi.Database;
 
 namespace CleenApi.Entities
 {
-  public interface IEntityChanges<TEntity> where TEntity : class, IEntity
+  public interface IEntityChanges<TEntity> where TEntity : IEntity
   {
     int? Id { get; }
 

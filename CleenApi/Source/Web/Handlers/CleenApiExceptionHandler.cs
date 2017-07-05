@@ -4,9 +4,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.ExceptionHandling;
-using CleenApi.Entities.Exceptions;
+using CleenApi.Exceptions;
 
-namespace CleenApi.Web
+namespace CleenApi.Web.Handlers
 {
   public class CleenApiExceptionHandler : ExceptionHandler
   {

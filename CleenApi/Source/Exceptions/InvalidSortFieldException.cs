@@ -1,4 +1,6 @@
-﻿namespace CleenApi.Entities.Exceptions
+﻿using CleenApi.Entities;
+
+namespace CleenApi.Exceptions
 {
   public class InvalidSortFieldException<TEntity> : BaseEntitySetException<TEntity>
     where TEntity : IEntity

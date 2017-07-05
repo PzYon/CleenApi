@@ -9,15 +9,15 @@ using CleenApi.Entities.Queries;
 namespace CleenApi.Web.Controllers
 {
   public abstract class BaseEntitySetController<TEntity, TEntitySet, TEntityChanges> : ApiController
-    where TEntity : class, IEntity, new()
+    where TEntity : IEntity
     where TEntitySet : class, IEntitySet<TEntity, TEntityChanges>, new()
-    where TEntityChanges : class, IEntityChanges<TEntity>
+    where TEntityChanges : IEntityChanges<TEntity>
   {
     protected readonly TEntitySet EntitySet = new TEntitySet();
 
     private readonly Stopwatch watch = Stopwatch.StartNew();
 
-    protected EntitySetQuery EntitySetQuery
+    protected EntitySetQuery Query
     {
       get
       {
@@ -30,12 +30,12 @@ namespace CleenApi.Web.Controllers
 
     public TEntity Get(int id)
     {
-      return EntitySet.Get(id, EntitySetQuery?.Includes);
+      return EntitySet.Get(id, Query?.Includes);
     }
 
     public TEntity[] Get()
     {
-      return EntitySet.Get(EntitySetQuery).ToArray();
+      return EntitySet.Get(Query).ToArray();
     }
 
     public TEntity Post(TEntityChanges entityChanges)
@@ -50,7 +50,7 @@ namespace CleenApi.Web.Controllers
 
     protected override void Dispose(bool disposing)
     {
-      Debug.Write("Controller lifetime: " + watch.ElapsedMilliseconds + "ms");
+      Debug.WriteLine("Controller lifetime: " + watch.ElapsedMilliseconds + "ms");
 
       base.Dispose(disposing);
     }

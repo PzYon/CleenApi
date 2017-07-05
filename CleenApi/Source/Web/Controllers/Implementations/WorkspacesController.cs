@@ -1,61 +1,61 @@
 ﻿using System.Linq;
 using System.Web.Http;
-using CleenApi.Entities.Implementations.Dynamics;
 using CleenApi.Entities.Implementations.Locations;
 using CleenApi.Entities.Implementations.Users;
 using CleenApi.Entities.Implementations.Workspaces;
+using CleenApi.Entities.Queries.Builder;
 
-namespace CleenApi.Web.Controllers.Dynamics
+namespace CleenApi.Web.Controllers.Implementations
 {
-  public class DynamicWorkspacesController
-    : BaseDbEntitySetController<Workspace, DynamicWorkspaceEntitySet, WorkspaceChanges, DynamicEntityQuery<Workspace>>
+  public class WorkspacesController
+    : BaseDbEntitySetController<Workspace, WorkspaceEntitySet, WorkspaceChanges, EntityQueryBuilder<Workspace>>
   {
     [HttpGet]
-    [Route("dynamicworkspace/{workspaceId}/likes")]
+    [Route("workspaces/{workspaceId}/likes")]
     public int GetLikes(int workspaceId)
     {
       return EntitySet.GetLikes(workspaceId);
     }
 
     [HttpPost]
-    [Route("dynamicworkspace/{workspaceId}/likes")]
+    [Route("workspaces/{workspaceId}/likes")]
     public int UpdateLikes(int workspaceId)
     {
       return EntitySet.UpdateLikes(workspaceId);
     }
 
     [HttpGet]
-    [Route("dynamicworkspaces/{workspaceId}/users")]
+    [Route("workspaces/{workspaceId}/users")]
     public User[] GetUsers(int workspaceId)
     {
       return EntitySet.GetUsersSet(workspaceId)
-                      .Get(EntitySetQuery)
+                      .Get(Query)
                       .ToArray();
     }
 
     [HttpPost]
-    [Route("dynamicworkspaces/{workspaceId}/users")]
+    [Route("workspaces/{workspaceId}/users")]
     public User AddUser(int workspaceId, [FromBody] UserChanges userChanges)
     {
       return EntitySet.AddUser(workspaceId, userChanges);
     }
 
     [HttpGet]
-    [Route("dynamicworkspaces/{workspaceId}/locations")]
+    [Route("workspaces/{workspaceId}/locations")]
     public Location[] GetLocations(int workspaceId)
     {
       return EntitySet.GetLocationsSet(workspaceId)
-                      .Get(EntitySetQuery)
+                      .Get(Query)
                       .ToArray();
     }
 
     [HttpGet]
-    [Route("dynamicworkspaces/{workspaceId}/users/{userId}/locations")]
+    [Route("workspaces/{workspaceId}/users/{userId}/locations")]
     public Location[] GetLocationsFromUser(int workspaceId, int userId)
     {
       return EntitySet.GetUsersSet(workspaceId)
                       .GetLocationsSet(userId)
-                      .Get(EntitySetQuery)
+                      .Get(Query)
                       .ToArray();
     }
   }

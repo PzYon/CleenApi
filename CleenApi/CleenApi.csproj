@@ -92,52 +92,45 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Source\Entities\Implementations\Dynamics\DynamicEntityQuery.cs" />
-    <Compile Include="Source\Entities\Exceptions\IEntityNotFoundException.cs" />
-    <Compile Include="Source\Entities\Exceptions\IEntityProcessingException.cs" />
-    <Compile Include="Source\Entities\Exceptions\InvalidConditionException.cs" />
-    <Compile Include="Source\Entities\Exceptions\InvalidEntityChangesException.cs" />
-    <Compile Include="Source\Entities\Exceptions\InvalidSortFieldException.cs" />
-    <Compile Include="Source\Entities\Implementations\BaseEntityQuery.cs" />
-    <Compile Include="Source\Entities\Implementations\Dynamics\LinqExtensions.cs" />
-    <Compile Include="Source\Entities\Implementations\Locations\DynamicLocationEntitySet.cs" />
+    <Compile Include="Source\Entities\Queries\Builder\EntityQueryBuilder.cs" />
+    <Compile Include="Source\Exceptions\IEntityNotFoundException.cs" />
+    <Compile Include="Source\Exceptions\IEntityProcessingException.cs" />
+    <Compile Include="Source\Exceptions\InvalidConditionException.cs" />
+    <Compile Include="Source\Exceptions\InvalidEntityChangesException.cs" />
+    <Compile Include="Source\Exceptions\InvalidSortFieldException.cs" />
+    <Compile Include="Source\Entities\Queries\Builder\BaseEntityQueryBuilder.cs" />
+    <Compile Include="Source\Entities\Queries\Builder\LinqExtensions.cs" />
+    <Compile Include="Source\Entities\Implementations\Locations\LocationEntitySet.cs" />
     <Compile Include="Source\Entities\Implementations\Locations\Location.cs" />
     <Compile Include="Source\Entities\Implementations\Locations\LocationChanges.cs" />
-    <Compile Include="Source\Entities\Implementations\Locations\LocationQuery.cs" />
-    <Compile Include="Source\Entities\Implementations\Users\DynamicUserEntitySet.cs" />
+    <Compile Include="Source\Entities\Implementations\Users\UserEntitySet.cs" />
     <Compile Include="Source\Entities\Queries\EntitySetQuery.cs" />
     <Compile Include="Source\Entities\Queries\SortDirection.cs" />
     <Compile Include="Source\Web\Controllers\BaseDbEntitySetController.cs" />
-    <Compile Include="Source\Entities\Exceptions\BaseEntitySetException.cs" />
-    <Compile Include="Source\Entities\Exceptions\EntityNotFoundException.cs" />
-    <Compile Include="Source\Entities\Exceptions\EntityProcessingException.cs" />
-    <Compile Include="Source\Entities\Implementations\Workspaces\DynamicWorkspaceEntitySet.cs" />
-    <Compile Include="Source\Web\Controllers\BaseEntitySetController.cs" />
-    <Compile Include="Source\Web\Controllers\Dynamics\DynamicLocationsController.cs" />
-    <Compile Include="Source\Web\Controllers\Dynamics\DynamicUsersController.cs" />
-    <Compile Include="Source\Web\Controllers\Dynamics\DynamicWorkspacesController.cs" />
-    <Compile Include="Source\Web\Controllers\Statics\UsersController.cs" />
-    <Compile Include="Source\Web\Controllers\Statics\WorkspacesController.cs" />
-    <Compile Include="Source\Entities\Implementations\BaseDbEntitySet.cs" />
-    <Compile Include="Source\Entities\IEntitySet.cs" />
-    <Compile Include="Source\Entities\IEntityQuery.cs" />
-    <Compile Include="Source\Entities\Implementations\Users\UserEntitySet.cs" />
+    <Compile Include="Source\Exceptions\BaseEntitySetException.cs" />
+    <Compile Include="Source\Exceptions\EntityNotFoundException.cs" />
+    <Compile Include="Source\Exceptions\EntityProcessingException.cs" />
     <Compile Include="Source\Entities\Implementations\Workspaces\WorkspaceEntitySet.cs" />
+    <Compile Include="Source\Web\Controllers\BaseEntitySetController.cs" />
+    <Compile Include="Source\Web\Controllers\Implementations\LocationsController.cs" />
+    <Compile Include="Source\Web\Controllers\Implementations\UsersController.cs" />
+    <Compile Include="Source\Web\Controllers\Implementations\WorkspacesController.cs" />
+    <Compile Include="Source\Entities\Implementations\DbEntitySet.cs" />
+    <Compile Include="Source\Entities\IEntitySet.cs" />
+    <Compile Include="Source\Entities\Queries\Builder\IEntityQueryBuilder.cs" />
     <Compile Include="Source\Database\CleenApiDbContext.cs" />
     <Compile Include="Source\Database\CleenApiDbInitializer.cs" />
     <Compile Include="Source\Entities\IEntity.cs" />
     <Compile Include="Source\Entities\IEntityChanges.cs" />
     <Compile Include="Source\Entities\Implementations\Users\User.cs" />
     <Compile Include="Source\Entities\Implementations\Users\UserChanges.cs" />
-    <Compile Include="Source\Entities\Implementations\Users\UserQuery.cs" />
     <Compile Include="Source\Entities\Implementations\Workspaces\Workspace.cs" />
     <Compile Include="Source\Entities\Implementations\Workspaces\WorkspaceChanges.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Source\Entities\Implementations\Workspaces\WorkspaceQuery.cs" />
-    <Compile Include="Source\Web\CleenApiExceptionHandler.cs" />
+    <Compile Include="Source\Web\Handlers\CleenApiExceptionHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

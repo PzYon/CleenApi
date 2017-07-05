@@ -1,10 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
-using CleenApi.Entities.Queries;
 
-namespace CleenApi.Entities.Implementations
+namespace CleenApi.Entities.Queries.Builder
 {
-  public abstract class BaseEntityQuery<TEntity> : IEntityQuery<TEntity> where TEntity : class, IEntity
+  public abstract class BaseEntityQueryBuilder<TEntity> : IEntityQueryBuilder<TEntity> where TEntity : IEntity
   {
     public abstract IQueryable<TEntity> ApplyIncludes(IQueryable<TEntity> queryable,
                                                       string[] propertiesToInclude);

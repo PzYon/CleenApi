@@ -1,18 +1,20 @@
-﻿using System.Linq;
+using System.Linq;
+using CleenApi.Entities.Implementations.Locations;
 using CleenApi.Entities.Implementations.Users;
+using CleenApi.Entities.Queries.Builder;
 
 namespace CleenApi.Entities.Implementations.Workspaces
 {
-  public class WorkspaceEntitySet : BaseDbEntitySet<Workspace, WorkspaceChanges, WorkspaceQuery>
+  public class WorkspaceEntitySet : DbEntitySet<Workspace, WorkspaceChanges, EntityQueryBuilder<Workspace>>
   {
     public int GetLikes(int id)
     {
-      return GetById(id).Likes;
+      return Get(id).Likes;
     }
 
     public int UpdateLikes(int id)
     {
-      Workspace w = GetById(id);
+      Workspace w = Get(id);
       w.Likes++;
 
       Db.AddOrUpdate(w);
@@ -36,6 +38,12 @@ namespace CleenApi.Entities.Implementations.Workspaces
     {
       IQueryable<User> users = GetByIdQuerable(workspaceId).SelectMany(w => w.Users);
       return new UserEntitySet(Db, users);
+    }
+
+    public LocationEntitySet GetLocationsSet(int workspaceId)
+    {
+      IQueryable<Location> locations = GetByIdQuerable(workspaceId).SelectMany(w => w.Locations);
+      return new LocationEntitySet(Db, locations);
     }
   }
 }

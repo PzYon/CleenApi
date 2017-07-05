@@ -1,9 +1,8 @@
 using System.Linq;
-using CleenApi.Entities.Queries;
 
-namespace CleenApi.Entities
+namespace CleenApi.Entities.Queries.Builder
 {
-  public interface IEntityQuery<TEntity> where TEntity : class, IEntity
+  public interface IEntityQueryBuilder<TEntity> where TEntity : IEntity
   {
     IQueryable<TEntity> Build(IQueryable<TEntity> queryable, EntitySetQuery entitySetQuery);
 
