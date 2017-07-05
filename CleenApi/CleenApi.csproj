@@ -92,6 +92,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Source\Entities\Implementations\NoDbItems\NoDbItem.cs" />
+    <Compile Include="Source\Entities\Implementations\NoDbItems\NoDbItemChanges.cs" />
+    <Compile Include="Source\Entities\Implementations\NoDbItems\NoDbItemEntitySet.cs" />
+    <Compile Include="Source\Entities\Implementations\NoDbItems\NoDbItemsRepo.cs" />
     <Compile Include="Source\Entities\Queries\Builder\EntityQueryBuilder.cs" />
     <Compile Include="Source\Exceptions\IEntityNotFoundException.cs" />
     <Compile Include="Source\Exceptions\IEntityProcessingException.cs" />
@@ -113,6 +117,7 @@
     <Compile Include="Source\Entities\Implementations\Workspaces\WorkspaceEntitySet.cs" />
     <Compile Include="Source\Web\Controllers\BaseEntitySetController.cs" />
     <Compile Include="Source\Web\Controllers\Implementations\LocationsController.cs" />
+    <Compile Include="Source\Web\Controllers\Implementations\NoDbItemsController.cs" />
     <Compile Include="Source\Web\Controllers\Implementations\UsersController.cs" />
     <Compile Include="Source\Web\Controllers\Implementations\WorkspacesController.cs" />
     <Compile Include="Source\Entities\Implementations\DbEntitySet.cs" />

@@ -6,7 +6,7 @@ namespace CleenApi.Entities.Implementations.Workspaces
 {
   public class WorkspaceChanges : IEntityChanges<Workspace>
   {
-    public int? Id { get; set; }
+    public int? Id { get; }
 
     public string Title { get; set; }
 

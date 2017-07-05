@@ -46,6 +46,9 @@ namespace CleenApi.Entities.Queries.Builder
       object convertedValue = ConvertValue(value, pi.PropertyType);
 
       ParameterExpression param = Expression.Parameter(typeof(TEntity));
+
+      // todo: adjust binaryExpression based on type
+      // (e.g. use Contains for string for example, maybe even add * wilcard)
       BinaryExpression binaryExpression = Expression.Equal(Expression.Property(param, pi),
                                                            Expression.Constant(convertedValue, pi.PropertyType));
       Func<TEntity, bool> conditionExpression = Expression.Lambda<Func<TEntity, bool>>(binaryExpression, param)

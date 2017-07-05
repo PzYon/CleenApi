@@ -4,7 +4,7 @@ namespace CleenApi.Entities.Implementations.Locations
 {
   public class LocationChanges : IEntityChanges<Location>
   {
-    public int? Id { get; set; }
+    public int? Id { get; }
 
     public string Name { get; set; }
 
