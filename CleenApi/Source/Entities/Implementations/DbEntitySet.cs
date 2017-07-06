@@ -2,13 +2,12 @@ using System;
 using System.Data.Entity;
 using System.Linq;
 using CleenApi.Database;
-using CleenApi.Entities.Queries;
 using CleenApi.Entities.Queries.Builder;
-using CleenApi.Exceptions;
 
 namespace CleenApi.Entities.Implementations
 {
-  public class DbEntitySet<TEntity, TEntityChanges, TEntityQueryBuilder> : IEntitySet<TEntity, TEntityChanges>
+  public class DbEntitySet<TEntity, TEntityChanges, TEntityQueryBuilder>
+    : BaseEntitySet<TEntity, TEntityChanges, TEntityQueryBuilder>
     where TEntity : class, IEntity
     where TEntityChanges : IEntityChanges<TEntity>
     where TEntityQueryBuilder : class, IEntityQueryBuilder<TEntity>, new()
@@ -18,9 +17,7 @@ namespace CleenApi.Entities.Implementations
 
     protected DbSet<TEntity> DbSet => Db.Set<TEntity>();
 
-    protected TEntityQueryBuilder EntityQuery => new TEntityQueryBuilder();
-
-    protected IQueryable<TEntity> Entities => entities ?? DbSet;
+    protected override IQueryable<TEntity> Entities => entities ?? DbSet;
     private readonly IQueryable<TEntity> entities;
 
     public DbEntitySet()
@@ -55,70 +52,25 @@ namespace CleenApi.Entities.Implementations
       return db;
     }
 
-    public TEntity Get(int id, string[] includes = null)
+    protected override TEntity Store(TEntity entity)
     {
-      IQueryable<TEntity> queryable = EntityQuery.ApplyDefaults(Entities);
-
-      if (includes != null)
-      {
-        queryable = EntityQuery.ApplyIncludes(queryable, includes);
-      }
-
-      TEntity entity = queryable.SingleOrDefault(e => e.Id == id);
-      if (entity == null)
-      {
-        throw new EntityNotFoundException<TEntity>(id);
-      }
-
-      return entity;
-    }
-
-    public IQueryable<TEntity> Get(EntitySetQuery query = null)
-    {
-      IQueryable<TEntity> queryable = Entities;
-
-      return query != null
-               ? EntityQuery.Build(queryable, query)
-               : queryable;
-    }
-
-    public TEntity Update(TEntityChanges entityChanges)
-    {
-      if (entityChanges == null)
-      {
-        throw new EntityProcessingException<TEntity>("EntityChanges are null or cannot be parsed.");
-      }
-
-      bool isNew = entityChanges.Id.HasValue && entityChanges.Id.Value > 0;
-
-      TEntity entity = isNew
-                         ? Get(entityChanges.Id.Value)
-                         : DbSet.Create();
-
-      entity = entityChanges.ApplyValues(Db, entity);
-
-      if (!entityChanges.IsValidEntity(entity))
-      {
-        throw new InvalidEntityChangesException<TEntity>(entityChanges.Id);
-      }
-
       return Db.AddOrUpdate(entity);
     }
 
-    public void Delete(int id)
+    protected override TEntity Create()
     {
-      DbSet.Remove(Get(id));
+      return DbSet.Create();
+    }
+
+    protected override void Delete(TEntity entity)
+    {
+      DbSet.Remove(entity);
       Db.SaveChanges();
     }
 
-    public void Dispose()
+    public override void Dispose()
     {
       Db?.Dispose();
-    }
-
-    protected IQueryable<TEntity> GetByIdQuerable(int id)
-    {
-      return Get().Where(e => e.Id == id).Take(1);
     }
   }
 }

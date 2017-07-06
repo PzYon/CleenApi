@@ -1,5 +1,3 @@
-using CleenApi.Database;
-
 namespace CleenApi.Entities.Implementations.Users
 {
   public class UserChanges : IEntityChanges<User>
@@ -10,7 +8,7 @@ namespace CleenApi.Entities.Implementations.Users
 
     public string Surname { get; set; }
 
-    public User ApplyValues(CleenApiDbContext db, User user)
+    public User ApplyValues(User user)
     {
       if (GivenName != null)
       {

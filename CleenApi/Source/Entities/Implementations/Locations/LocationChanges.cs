@@ -1,6 +1,4 @@
-﻿using CleenApi.Database;
-
-namespace CleenApi.Entities.Implementations.Locations
+﻿namespace CleenApi.Entities.Implementations.Locations
 {
   public class LocationChanges : IEntityChanges<Location>
   {
@@ -8,7 +6,7 @@ namespace CleenApi.Entities.Implementations.Locations
 
     public string Name { get; set; }
 
-    public Location ApplyValues(CleenApiDbContext db, Location location)
+    public Location ApplyValues(Location location)
     {
       if (Name != null)
       {

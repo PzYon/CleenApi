@@ -1,6 +1,4 @@
-﻿using CleenApi.Database;
-
-namespace CleenApi.Entities.Implementations.NoDbItems
+﻿namespace CleenApi.Entities.Implementations.NoDbItems
 {
   public class NoDbItemChanges : IEntityChanges<NoDbItem>
   {
@@ -8,7 +6,7 @@ namespace CleenApi.Entities.Implementations.NoDbItems
 
     public string Title { get; set; }
 
-    public NoDbItem ApplyValues(CleenApiDbContext db, NoDbItem noDbItem)
+    public NoDbItem ApplyValues(NoDbItem noDbItem)
     {
       if (Title != null)
       {

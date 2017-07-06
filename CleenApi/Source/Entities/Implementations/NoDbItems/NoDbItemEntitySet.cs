@@ -1,51 +1,33 @@
 ﻿using System.Linq;
-using CleenApi.Entities.Queries;
-using CleenApi.Entities.Queries.Builder;
 
 namespace CleenApi.Entities.Implementations.NoDbItems
 {
-  public class NoDbItemEntitySet : IEntitySet<NoDbItem, NoDbItemChanges>
+  public class NoDbItemEntitySet : BaseEntitySet<NoDbItem, NoDbItemChanges, NoDbItemQueryBuilder>
   {
-    public NoDbItem Get(int id, string[] includes = null)
+    protected override IQueryable<NoDbItem> Entities => NoDbItemsRepo.Items.AsQueryable();
+
+    protected override NoDbItem Create()
     {
-      return NoDbItemsRepo.Items.SingleOrDefault(i => i.Id == id);
+      return new NoDbItem
+        {
+          Id = NoDbItemsRepo.Items.OrderByDescending(i => i.Id)
+                            .Select(i => i.Id)
+                            .First()
+        };
     }
 
-    public IQueryable<NoDbItem> Get(EntitySetQuery query)
+    protected override NoDbItem Store(NoDbItem entity)
     {
-      IQueryable<NoDbItem> noDbItems = NoDbItemsRepo.Items.AsQueryable();
-
-      return query == null
-               ? noDbItems
-               : new EntityQueryBuilder<NoDbItem>().Build(noDbItems, query);
+      NoDbItemsRepo.Items.Add(entity);
+      return entity;
     }
 
-    public NoDbItem Update(NoDbItemChanges entityChanges)
+    protected override void Delete(NoDbItem entity)
     {
-      NoDbItem item;
-      if (!entityChanges.Id.HasValue)
-      {
-        item = new NoDbItem
-          {
-            Id = NoDbItemsRepo.Items.OrderByDescending(i => i.Id).Select(i => i.Id).First()
-          };
-        NoDbItemsRepo.Items.Add(item);
-      }
-      else
-      {
-        item = Get(entityChanges.Id.Value);
-      }
-
-      return entityChanges.ApplyValues(null, item);
+      NoDbItemsRepo.Items.Remove(entity);
     }
 
-    public void Delete(int id)
-    {
-      NoDbItem item = Get(id);
-      NoDbItemsRepo.Items.Remove(item);
-    }
-
-    public void Dispose()
+    public override void Dispose()
     {
     }
   }

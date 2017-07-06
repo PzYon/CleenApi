@@ -21,9 +21,14 @@ namespace CleenApi.Entities.Queries.Builder
       return queryable;
     }
 
-    public IQueryable<TEntity> Build(IQueryable<TEntity> queryable, EntitySetQuery query)
+    public IQueryable<TEntity> Build(IQueryable<TEntity> queryable, EntitySetQuery query = null)
     {
       queryable = ApplyDefaults(queryable);
+
+      if (query == null)
+      {
+        return queryable;
+      }
 
       queryable = ApplyIncludes(queryable, query.Includes);
       queryable = ApplyConditions(queryable, query.Conditions);
