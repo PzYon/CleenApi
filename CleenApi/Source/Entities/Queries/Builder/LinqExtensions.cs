@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using CleenApi.Entities.Queries.Builder.Expressions;
 using CleenApi.Exceptions;
 
 namespace CleenApi.Entities.Queries.Builder
@@ -14,7 +15,6 @@ namespace CleenApi.Entities.Queries.Builder
                                                        bool isAlreadyOrdered)
     {
       Type type = typeof(TEntity);
-
       PropertyInfo pi = GetProperty<TEntity>(propertyName);
 
       ParameterExpression parameter = Expression.Parameter(type, "p");
@@ -40,7 +40,8 @@ namespace CleenApi.Entities.Queries.Builder
 
     public static IQueryable<TEntity> Where<TEntity>(this IQueryable<TEntity> queryable,
                                                      string propertyName,
-                                                     string value)
+                                                     string value,
+                                                     IQueryExpressionBuilder expressionBuilder)
     {
       PropertyInfo pi = GetProperty<TEntity>(propertyName);
       Type propertyType = pi.PropertyType;
@@ -51,9 +52,7 @@ namespace CleenApi.Entities.Queries.Builder
       MemberExpression memberExpression = Expression.Property(param, pi);
 
       Expression<Func<TEntity, bool>> expression = propertyType == typeof(string)
-                                                     ? GetStringCondition<TEntity>(value,
-                                                                                   memberExpression,
-                                                                                   param)
+                                                     ? expressionBuilder.GetStringCondition<TEntity>(value, memberExpression, param)
                                                      : GetCondition<TEntity>(convertedValue,
                                                                              memberExpression,
                                                                              propertyType,
@@ -70,22 +69,6 @@ namespace CleenApi.Entities.Queries.Builder
       return Expression.Lambda<Func<TEntity, bool>>(Expression.Equal(memberExpression,
                                                                      Expression.Constant(value, propertyType)),
                                                     param);
-    }
-
-    private static Expression<Func<TEntity, bool>> GetStringCondition<TEntity>(string value,
-                                                                               MemberExpression memberExpression,
-                                                                               ParameterExpression param)
-    {
-      Type stringType = typeof(string);
-
-      string conditionValue = value.TrimEnd('*').TrimStart('*');
-
-      MethodCallExpression methodExpression = Expression.Call(memberExpression,
-                                                              stringType.GetMethod(GetStringMethodName(value),
-                                                                                   new[] {stringType}),
-                                                              Expression.Constant(conditionValue, stringType));
-
-      return Expression.Lambda<Func<TEntity, bool>>(methodExpression, param);
     }
 
     private static PropertyInfo GetProperty<TEntity>(string name)
@@ -117,26 +100,6 @@ namespace CleenApi.Entities.Queries.Builder
       }
 
       throw new EntityPropertyValueTypeNotSupportedException(value, targetType);
-    }
-
-    private static string GetStringMethodName(string value)
-    {
-      if (value.StartsWith("*") && value.EndsWith("*"))
-      {
-        return nameof(string.Contains);
-      }
-
-      if (value.EndsWith("*"))
-      {
-        return nameof(string.StartsWith);
-      }
-
-      if (value.StartsWith("*"))
-      {
-        return nameof(string.EndsWith);
-      }
-
-      return nameof(string.Equals);
     }
   }
 }

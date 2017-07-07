@@ -5,7 +5,7 @@ using CleenApi.Entities.Queries.Builder;
 
 namespace CleenApi.Entities.Implementations.Workspaces
 {
-  public class WorkspaceEntitySet : DbEntitySet<Workspace, WorkspaceChanges, EntityQueryBuilder<Workspace>>
+  public class WorkspaceEntitySet : DbEntitySet<Workspace, WorkspaceChanges, DbEntityQueryBuilder<Workspace>>
   {
     public int GetLikes(int id)
     {

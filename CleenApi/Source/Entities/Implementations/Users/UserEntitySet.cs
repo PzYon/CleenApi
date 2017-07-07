@@ -6,7 +6,7 @@ using CleenApi.Entities.Queries.Builder;
 namespace CleenApi.Entities.Implementations.Users
 {
   public class UserEntitySet
-    : DbEntitySet<User, UserChanges, EntityQueryBuilder<User>>
+    : DbEntitySet<User, UserChanges, DbEntityQueryBuilder<User>>
   {
     public UserEntitySet()
     {

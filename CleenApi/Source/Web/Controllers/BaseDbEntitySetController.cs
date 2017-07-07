@@ -10,7 +10,7 @@ namespace CleenApi.Web.Controllers
     where TEntity : class, IEntity
     where TEntitySet : DbEntitySet<TEntity, TEntityChanges, TEntityQueryBuilder>, new()
     where TEntityChanges : IEntityChanges<TEntity>
-    where TEntityQueryBuilder : class, IEntityQueryBuilder<TEntity>, new()
+    where TEntityQueryBuilder : DbEntityQueryBuilder<TEntity>, new()
   {
     private readonly CleenApiDbContext db = new CleenApiDbContext();
 

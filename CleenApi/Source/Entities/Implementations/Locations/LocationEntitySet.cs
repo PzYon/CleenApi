@@ -4,7 +4,7 @@ using CleenApi.Entities.Queries.Builder;
 
 namespace CleenApi.Entities.Implementations.Locations
 {
-  public class LocationEntitySet : DbEntitySet<Location, LocationChanges, EntityQueryBuilder<Location>>
+  public class LocationEntitySet : DbEntitySet<Location, LocationChanges, DbEntityQueryBuilder<Location>>
   {
     public LocationEntitySet()
     {

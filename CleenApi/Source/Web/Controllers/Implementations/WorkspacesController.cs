@@ -8,7 +8,7 @@ using CleenApi.Entities.Queries.Builder;
 namespace CleenApi.Web.Controllers.Implementations
 {
   public class WorkspacesController
-    : BaseDbEntitySetController<Workspace, WorkspaceEntitySet, WorkspaceChanges, EntityQueryBuilder<Workspace>>
+    : BaseDbEntitySetController<Workspace, WorkspaceEntitySet, WorkspaceChanges, DbEntityQueryBuilder<Workspace>>
   {
     [HttpGet]
     [Route("workspaces/{workspaceId}/likes")]

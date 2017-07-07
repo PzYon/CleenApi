@@ -98,7 +98,11 @@
     <Compile Include="Source\Entities\Implementations\NoDbItems\NoDbItemEntitySet.cs" />
     <Compile Include="Source\Entities\Implementations\NoDbItems\NoDbItemsRepo.cs" />
     <Compile Include="Source\Entities\Implementations\NoDbItems\NoDbItemQueryBuilder.cs" />
+    <Compile Include="Source\Entities\Queries\Builder\DbEntityQueryBuilder.cs" />
+    <Compile Include="Source\Entities\Queries\Builder\Expressions\DbQueryExpressionBuilder.cs" />
     <Compile Include="Source\Entities\Queries\Builder\EntityQueryBuilder.cs" />
+    <Compile Include="Source\Entities\Queries\Builder\Expressions\IQueryExpressionBuilder.cs" />
+    <Compile Include="Source\Entities\Queries\Builder\Expressions\QueryExpressionBuilder.cs" />
     <Compile Include="Source\Exceptions\EntityPropertyDoesNotExistException.cs" />
     <Compile Include="Source\Exceptions\EntityPropertyValueTypeNotSupportedException.cs" />
     <Compile Include="Source\Exceptions\IEntityNotFoundException.cs" />

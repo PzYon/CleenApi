@@ -10,7 +10,7 @@ namespace CleenApi.Entities.Implementations
     : BaseEntitySet<TEntity, TEntityChanges, TEntityQueryBuilder>
     where TEntity : class, IEntity
     where TEntityChanges : IEntityChanges<TEntity>
-    where TEntityQueryBuilder : class, IEntityQueryBuilder<TEntity>, new()
+    where TEntityQueryBuilder : DbEntityQueryBuilder<TEntity>, new()
   {
     protected CleenApiDbContext Db => GetDb();
     private CleenApiDbContext db;

@@ -4,7 +4,7 @@ using CleenApi.Entities.Queries.Builder;
 namespace CleenApi.Web.Controllers.Implementations
 {
   public class UsersController
-    : BaseDbEntitySetController<User, UserEntitySet, UserChanges, EntityQueryBuilder<User>>
+    : BaseDbEntitySetController<User, UserEntitySet, UserChanges, DbEntityQueryBuilder<User>>
   {
   }
 }
