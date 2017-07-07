@@ -1,7 +1,6 @@
 ﻿using CleenApi.Database;
 using CleenApi.Entities;
-using CleenApi.Entities.Implementations;
-using CleenApi.Entities.Queries.Builder;
+using CleenApi.Queries.QueryBuilders;
 
 namespace CleenApi.Web.Controllers
 {

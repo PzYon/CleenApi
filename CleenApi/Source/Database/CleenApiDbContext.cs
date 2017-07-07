@@ -2,9 +2,9 @@
 using System.Diagnostics;
 using System.Linq;
 using CleenApi.Entities;
-using CleenApi.Entities.Implementations.Locations;
-using CleenApi.Entities.Implementations.Users;
-using CleenApi.Entities.Implementations.Workspaces;
+using CleenApi.Entities.Locations;
+using CleenApi.Entities.Users;
+using CleenApi.Entities.Workspaces;
 
 namespace CleenApi.Database
 {

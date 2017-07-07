@@ -1,4 +1,4 @@
-﻿using CleenApi.Entities.Implementations.NoDbItems;
+﻿using CleenApi.Entities.NoDbItems;
 
 namespace CleenApi.Web.Controllers.Implementations
 {

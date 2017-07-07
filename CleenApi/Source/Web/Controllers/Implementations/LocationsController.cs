@@ -1,5 +1,5 @@
-﻿using CleenApi.Entities.Implementations.Locations;
-using CleenApi.Entities.Queries.Builder;
+﻿using CleenApi.Entities.Locations;
+using CleenApi.Queries.QueryBuilders;
 
 namespace CleenApi.Web.Controllers.Implementations
 {

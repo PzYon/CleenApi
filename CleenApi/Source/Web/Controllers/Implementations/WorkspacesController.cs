@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using System.Web.Http;
-using CleenApi.Entities.Implementations.Locations;
-using CleenApi.Entities.Implementations.Users;
-using CleenApi.Entities.Implementations.Workspaces;
-using CleenApi.Entities.Queries.Builder;
+using CleenApi.Entities.Locations;
+using CleenApi.Entities.Users;
+using CleenApi.Entities.Workspaces;
+using CleenApi.Queries.QueryBuilders;
 
 namespace CleenApi.Web.Controllers.Implementations
 {

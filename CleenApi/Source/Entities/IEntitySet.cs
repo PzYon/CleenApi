@@ -1,6 +1,6 @@
 using System;
 using System.Linq;
-using CleenApi.Entities.Queries;
+using CleenApi.Queries;
 
 namespace CleenApi.Entities
 {

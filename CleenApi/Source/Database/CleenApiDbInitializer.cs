@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Data.Entity;
-using CleenApi.Entities.Implementations.Locations;
-using CleenApi.Entities.Implementations.Users;
-using CleenApi.Entities.Implementations.Workspaces;
+using CleenApi.Entities.Locations;
+using CleenApi.Entities.Users;
+using CleenApi.Entities.Workspaces;
 
 namespace CleenApi.Database
 {

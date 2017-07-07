@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Web.Http;
 using CleenApi.Entities;
-using CleenApi.Entities.Queries;
+using CleenApi.Queries;
 
 namespace CleenApi.Web.Controllers
 {
