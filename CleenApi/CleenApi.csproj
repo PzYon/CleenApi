@@ -99,6 +99,8 @@
     <Compile Include="Source\Entities\Implementations\NoDbItems\NoDbItemsRepo.cs" />
     <Compile Include="Source\Entities\Implementations\NoDbItems\NoDbItemQueryBuilder.cs" />
     <Compile Include="Source\Entities\Queries\Builder\EntityQueryBuilder.cs" />
+    <Compile Include="Source\Exceptions\EntityPropertyDoesNotExistException.cs" />
+    <Compile Include="Source\Exceptions\EntityPropertyValueTypeNotSupportedException.cs" />
     <Compile Include="Source\Exceptions\IEntityNotFoundException.cs" />
     <Compile Include="Source\Exceptions\IEntityProcessingException.cs" />
     <Compile Include="Source\Exceptions\InvalidConditionException.cs" />

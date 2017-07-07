@@ -70,7 +70,7 @@ namespace CleenApi.Entities.Implementations
 
     public override void Dispose()
     {
-      Db?.Dispose();
+      Db.Dispose();
     }
   }
 }

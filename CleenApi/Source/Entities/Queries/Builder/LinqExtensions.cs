@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using CleenApi.Exceptions;
 
 namespace CleenApi.Entities.Queries.Builder
 {
@@ -42,19 +43,49 @@ namespace CleenApi.Entities.Queries.Builder
                                                      string value)
     {
       PropertyInfo pi = GetProperty<TEntity>(propertyName);
+      Type propertyType = pi.PropertyType;
 
-      object convertedValue = ConvertValue(value, pi.PropertyType);
+      object convertedValue = ConvertValue(value, propertyType);
 
       ParameterExpression param = Expression.Parameter(typeof(TEntity));
+      MemberExpression memberExpression = Expression.Property(param, pi);
 
-      // todo: adjust binaryExpression based on type
-      // (e.g. use Contains for string for example, maybe even add * wilcard)
-      BinaryExpression binaryExpression = Expression.Equal(Expression.Property(param, pi),
-                                                           Expression.Constant(convertedValue, pi.PropertyType));
-      Func<TEntity, bool> conditionExpression = Expression.Lambda<Func<TEntity, bool>>(binaryExpression, param)
-                                                          .Compile();
+      Expression<Func<TEntity, bool>> expression = propertyType == typeof(string)
+                                                     ? GetStringCondition<TEntity>(value,
+                                                                                   memberExpression,
+                                                                                   param)
+                                                     : GetCondition<TEntity>(convertedValue,
+                                                                             memberExpression,
+                                                                             propertyType,
+                                                                             param);
 
-      return queryable.Where(conditionExpression).AsQueryable();
+      return queryable.Where(expression).AsQueryable();
+    }
+
+    private static Expression<Func<TEntity, bool>> GetCondition<TEntity>(object value,
+                                                                         MemberExpression memberExpression,
+                                                                         Type propertyType,
+                                                                         ParameterExpression param)
+    {
+      return Expression.Lambda<Func<TEntity, bool>>(Expression.Equal(memberExpression,
+                                                                     Expression.Constant(value, propertyType)),
+                                                    param);
+    }
+
+    private static Expression<Func<TEntity, bool>> GetStringCondition<TEntity>(string value,
+                                                                               MemberExpression memberExpression,
+                                                                               ParameterExpression param)
+    {
+      Type stringType = typeof(string);
+
+      string conditionValue = value.TrimEnd('*').TrimStart('*');
+
+      MethodCallExpression methodExpression = Expression.Call(memberExpression,
+                                                              stringType.GetMethod(GetStringMethodName(value),
+                                                                                   new[] {stringType}),
+                                                              Expression.Constant(conditionValue, stringType));
+
+      return Expression.Lambda<Func<TEntity, bool>>(methodExpression, param);
     }
 
     private static PropertyInfo GetProperty<TEntity>(string name)
@@ -62,7 +93,7 @@ namespace CleenApi.Entities.Queries.Builder
       PropertyInfo pi = typeof(TEntity).GetTypeInfo().GetDeclaredProperty(name);
       if (pi == null)
       {
-        throw new Exception($"Property '{name}' doesn't exist.");
+        throw new EntityPropertyDoesNotExistException(typeof(TEntity), name);
       }
 
       return pi;
@@ -80,7 +111,32 @@ namespace CleenApi.Entities.Queries.Builder
         return Convert.ToInt32(value);
       }
 
-      throw new Exception($"Value '{value}' is not supported.");
+      if (targetType == typeof(bool))
+      {
+        return Convert.ToBoolean(value);
+      }
+
+      throw new EntityPropertyValueTypeNotSupportedException(value, targetType);
+    }
+
+    private static string GetStringMethodName(string value)
+    {
+      if (value.StartsWith("*") && value.EndsWith("*"))
+      {
+        return nameof(string.Contains);
+      }
+
+      if (value.EndsWith("*"))
+      {
+        return nameof(string.StartsWith);
+      }
+
+      if (value.StartsWith("*"))
+      {
+        return nameof(string.EndsWith);
+      }
+
+      return nameof(string.Equals);
     }
   }
 }
