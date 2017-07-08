@@ -2,7 +2,7 @@
 
 namespace CleenApi.Exceptions
 {
-  public class InvalidConditionException<TEntity> : BaseEntitySetException<TEntity>
+  public class InvalidConditionException<TEntity> : BaseEntitySetException<TEntity>, IInvalidRequestException
     where TEntity : IEntity
   {
     public InvalidConditionException(string fieldName, string value)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity.Core.Metadata.Edm;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -75,19 +76,31 @@ namespace CleenApi.Queries.QueryBuilders
 
     private static object ConvertValue(string value, Type targetType)
     {
-      if (targetType == typeof(string))
+      try
       {
-        return value;
-      }
+        if (targetType == typeof(string))
+        {
+          return value;
+        }
 
-      if (targetType == typeof(int))
-      {
-        return Convert.ToInt32(value);
-      }
+        if (targetType == typeof(int))
+        {
+          return Convert.ToInt32(value);
+        }
 
-      if (targetType == typeof(bool))
+        if (targetType == typeof(bool))
+        {
+          return Convert.ToBoolean(value);
+        }
+
+        if (targetType.IsEnum)
+        {
+          return Enum.Parse(targetType, value);
+        }
+      }
+      catch (Exception ex)
       {
-        return Convert.ToBoolean(value);
+        throw new EntityPropertyValueTypeNotSupportedException(value, targetType);
       }
 
       throw new EntityPropertyValueTypeNotSupportedException(value, targetType);

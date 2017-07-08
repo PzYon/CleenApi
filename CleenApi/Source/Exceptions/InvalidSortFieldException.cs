@@ -2,7 +2,7 @@
 
 namespace CleenApi.Exceptions
 {
-  public class InvalidSortFieldException<TEntity> : BaseEntitySetException<TEntity>
+  public class InvalidSortFieldException<TEntity> : BaseEntitySetException<TEntity>, IInvalidRequestException
     where TEntity : IEntity
   {
     public InvalidSortFieldException(string fieldName)

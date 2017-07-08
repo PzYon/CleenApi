@@ -98,6 +98,7 @@
     <Compile Include="Source\Entities\NoDbItems\NoDbItemEntitySet.cs" />
     <Compile Include="Source\Entities\NoDbItems\NoDbItemsRepo.cs" />
     <Compile Include="Source\Entities\NoDbItems\NoDbItemQueryBuilder.cs" />
+    <Compile Include="Source\Exceptions\IInvalidRequestException.cs" />
     <Compile Include="Source\Queries\QueryBuilders\DbEntityQueryBuilder.cs" />
     <Compile Include="Source\Queries\ExpressionBuilders\BaseExpressionBuilder.cs" />
     <Compile Include="Source\Queries\ExpressionBuilders\DbExpressionBuilder.cs" />

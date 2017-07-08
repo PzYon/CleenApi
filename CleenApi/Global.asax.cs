@@ -1,9 +1,11 @@
-﻿using System.Web;
+﻿using System.Collections.Generic;
+using System.Web;
 using System.Web.Http;
 using System.Web.Http.ExceptionHandling;
 using CleenApi.Database;
 using CleenApi.Web.Handlers;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 
 namespace CleenApi
@@ -28,6 +30,7 @@ namespace CleenApi
 
       config.Formatters.JsonFormatter.SerializerSettings = new JsonSerializerSettings
         {
+          Converters = new List<JsonConverter> {new StringEnumConverter()},
           ContractResolver = new CamelCasePropertyNamesContractResolver()
         };
     }

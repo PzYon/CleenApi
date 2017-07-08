@@ -41,7 +41,8 @@ namespace CleenApi.Database
               new Location {Name = "Worldwide"},
               new Location {Name = "Portugal"},
               new Location {Name = "Argentina"}
-            }
+            },
+          SomeType = SomeType.SomethingElse
         });
 
       context.Locations.Add(new Location {Name = "Basel"});
@@ -54,10 +55,10 @@ namespace CleenApi.Database
 
       context.Workspaces.Add(new Workspace {Title = "IT"});
       context.Workspaces.Add(new Workspace {Title = "Finance"});
-      context.Workspaces.Add(new Workspace {Title = "Project"});
+      context.Workspaces.Add(new Workspace {Title = "Project", SomeType = SomeType.SomethingElse});
       context.Workspaces.Add(new Workspace {Title = "Corporate Fuckoff"});
       context.Workspaces.Add(new Workspace {Title = "Human Capital"});
-      context.Workspaces.Add(new Workspace {Title = "Secret Stuff"});
+      context.Workspaces.Add(new Workspace {Title = "Secret Stuff", SomeType = SomeType.SomethingElse});
 
       context.Users.Add(new User {GivenName = "Markus", Surname = "Doggweiler"});
       context.Users.Add(new User {GivenName = "Patrick", Surname = "Doggweiler"});

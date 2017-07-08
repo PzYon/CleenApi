@@ -18,10 +18,11 @@ namespace CleenApi.Web.Handlers
                                                   HttpStatusCode.NotFound,
                                                   context.Exception.Message);
       }
-      else if (context.Exception is IEntityProcessingException)
+      else if (context.Exception is IEntityProcessingException
+               || context.Exception is IInvalidRequestException)
       {
         context.Result = new TextPlainErrorResult(context.Request,
-                                                  HttpStatusCode.InternalServerError,
+                                                  HttpStatusCode.BadRequest,
                                                   context.Exception.Message);
       }
       else

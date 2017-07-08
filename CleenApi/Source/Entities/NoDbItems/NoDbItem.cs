@@ -1,4 +1,6 @@
-﻿namespace CleenApi.Entities.NoDbItems
+﻿using CleenApi.Entities.Workspaces;
+
+namespace CleenApi.Entities.NoDbItems
 {
   public class NoDbItem : IEntity
   {
@@ -7,5 +9,7 @@
     public string Title { get; set; }
 
     public bool IsValid { get; set; }
+
+    public SomeType SomeType { get; set; }
   }
 }
