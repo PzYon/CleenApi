@@ -30,6 +30,7 @@ namespace CleenApi
 
       config.Formatters.JsonFormatter.SerializerSettings = new JsonSerializerSettings
         {
+          Formatting = Formatting.Indented,
           Converters = new List<JsonConverter> {new StringEnumConverter()},
           ContractResolver = new CamelCasePropertyNamesContractResolver()
         };

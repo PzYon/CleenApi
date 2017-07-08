@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Linq.Expressions;
 
-namespace CleenApi.Queries.ExpressionBuilders
+namespace CleenApi.Queries.LinqUtilities
 {
-  public class ExpressionBuilder : BaseExpressionBuilder
+  public class DefaultLinqUtility : BaseLinqUtility
   {
-    public override Expression<Func<TEntity, bool>> BuildStringCondition<TEntity>(string value,
-                                                                       MemberExpression memberExpression,
-                                                                       ParameterExpression param)
+    protected override Expression<Func<TEntity, bool>> BuildStringCondition<TEntity>(string value,
+                                                                                     MemberExpression memberExpression,
+                                                                                     ParameterExpression param)
     {
       Type stringType = typeof(string);
       Type stringComparisonType = typeof(StringComparison);

@@ -2,15 +2,15 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using CleenApi.Entities;
-using CleenApi.Queries.ExpressionBuilders;
+using CleenApi.Queries.LinqUtilities;
 
 namespace CleenApi.Queries.QueryBuilders
 {
-  public abstract class BaseEntityQueryBuilder<TEntity, TExpressionBuilder> : IEntityQueryBuilder<TEntity>
+  public abstract class BaseEntityQueryBuilder<TEntity, TLinqUtility> : IEntityQueryBuilder<TEntity>
     where TEntity : IEntity
-    where TExpressionBuilder : class, IExpressionBuilder, new()
+    where TLinqUtility : class, ILinqUtility, new()
   {
-    protected readonly IExpressionBuilder ExpressionBuilder = new TExpressionBuilder();
+    protected readonly ILinqUtility LinqUtility = new TLinqUtility();
 
     public virtual IQueryable<TEntity> Build(IQueryable<TEntity> queryable, EntitySetQuery query = null)
     {
@@ -45,8 +45,7 @@ namespace CleenApi.Queries.QueryBuilders
       return queryable;
     }
 
-    public virtual IQueryable<TEntity> ApplyIncludes(IQueryable<TEntity> queryable,
-                                                     string[] includes)
+    public virtual IQueryable<TEntity> ApplyIncludes(IQueryable<TEntity> queryable, string[] includes)
     {
       foreach (string include in includes)
       {
@@ -64,7 +63,7 @@ namespace CleenApi.Queries.QueryBuilders
         string propertyName = condition.Key;
         string value = condition.Value;
 
-        queryable = queryable.Where(propertyName, value, ExpressionBuilder);
+        queryable = LinqUtility.Where(queryable, propertyName, value);
       }
 
       return queryable;
@@ -73,16 +72,16 @@ namespace CleenApi.Queries.QueryBuilders
     protected virtual IQueryable<TEntity> ApplyOrderBy(IQueryable<TEntity> queryable,
                                                        Dictionary<string, SortDirection> sortFields)
     {
-      var isAlreadyOrdered = false;
+      var isAlreadySorted = false;
 
       foreach (KeyValuePair<string, SortDirection> sortField in sortFields)
       {
         string propertyName = sortField.Key;
         SortDirection sortDirection = sortField.Value;
 
-        queryable = queryable.OrderBy(propertyName, sortDirection, isAlreadyOrdered);
+        queryable = LinqUtility.OrderBy(queryable, propertyName, sortDirection, isAlreadySorted);
 
-        isAlreadyOrdered = true;
+        isAlreadySorted = true;
       }
 
       return queryable;
