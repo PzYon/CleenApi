@@ -38,9 +38,14 @@ namespace CleenApi.Library.Web.Controllers
       return EntitySet.Get(Query).ToArray();
     }
 
-    public TEntity Post(TEntityChanges entityChanges)
+    public TEntity Put([FromBody] TEntityChanges entityChanges, int id = 0)
     {
-      return EntitySet.Update(entityChanges);
+      return EntitySet.Update(entityChanges, id);
+    }
+
+    public TEntity Post([FromBody] TEntityChanges entityChanges)
+    {
+      return EntitySet.Create(entityChanges);
     }
 
     public void Delete(int id)

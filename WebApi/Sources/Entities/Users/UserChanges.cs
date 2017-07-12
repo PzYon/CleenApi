@@ -4,7 +4,7 @@ namespace CleenApi.WebApi.Entities.Users
 {
   public class UserChanges : IEntityChanges<User>
   {
-    public int? Id { get; }
+    public int Id { get; set; }
 
     public string GivenName { get; set; }
 

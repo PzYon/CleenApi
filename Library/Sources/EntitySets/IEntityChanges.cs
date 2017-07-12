@@ -2,7 +2,7 @@ namespace CleenApi.Library.EntitySets
 {
   public interface IEntityChanges<TEntity> where TEntity : IEntity
   {
-    int? Id { get; }
+    int Id { get; set; }
 
     TEntity ApplyValues(TEntity entity);
 

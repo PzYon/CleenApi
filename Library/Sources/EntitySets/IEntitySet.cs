@@ -12,7 +12,9 @@ namespace CleenApi.Library.EntitySets
 
     IQueryable<TEntity> Get(EntitySetQuery query);
 
-    TEntity Update(TEntityChanges entityChanges);
+    TEntity Update(TEntityChanges entityChanges, int id = 0);
+
+    TEntity Create(TEntityChanges entityChanges);
 
     void Delete(int id);
   }

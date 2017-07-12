@@ -44,19 +44,35 @@ namespace CleenApi.Library.EntitySets
       return QueryBuilder.Build(Entities, query);
     }
 
-    public TEntity Update(TEntityChanges entityChanges)
+    public TEntity Update(TEntityChanges entityChanges, int id = 0)
     {
       if (entityChanges == null)
       {
         throw new EntityProcessingException<TEntity>("EntityChanges are null or cannot be parsed.");
       }
 
-      bool isNew = entityChanges.Id.HasValue && entityChanges.Id.Value > 0;
+      int validId = EnsureValidId(id, entityChanges.Id);
 
-      TEntity entity = isNew
-                         ? Get(entityChanges.Id.Value)
-                         : Create();
+      return ApplyChangesAndStore(entityChanges, Get(validId));
+    }
 
+    public TEntity Create(TEntityChanges entityChanges)
+    {
+      if (entityChanges == null)
+      {
+        throw new EntityProcessingException<TEntity>("EntityChanges are null or cannot be parsed.");
+      }
+
+      if (entityChanges.Id > 0)
+      {
+        throw  new EntityProcessingException<TEntity>("Cannot add an entity that already has an Id.");
+      }
+
+      return ApplyChangesAndStore(entityChanges, Create());
+    }
+
+    private TEntity ApplyChangesAndStore(TEntityChanges entityChanges, TEntity entity)
+    {
       entity = entityChanges.ApplyValues(entity);
 
       if (!entityChanges.IsValidEntity(entity))
@@ -75,6 +91,28 @@ namespace CleenApi.Library.EntitySets
     protected IQueryable<TEntity> GetByIdQuerable(int id)
     {
       return Get().Where(e => e.Id == id).Take(1);
+    }
+
+    private static int EnsureValidId(int idFromUrl, int idFromChangesObject)
+    {
+      bool hasValueInChangesObject = idFromChangesObject > 0;
+      bool hasValueInUrl = idFromUrl > 0;
+
+      if (!hasValueInChangesObject && !hasValueInUrl)
+      {
+        throw new EntityProcessingException<TEntity>("An Id must be specified, either in "
+                                                     + "the changes object or in the URL.");
+      }
+
+      if (hasValueInUrl && hasValueInChangesObject && idFromChangesObject != idFromUrl)
+      {
+        throw new EntityProcessingException<TEntity>($"Id in changes object ({idFromChangesObject}) "
+                                                     + $"and Id in URL ({idFromUrl}) don't match.");
+      }
+
+      return hasValueInUrl
+               ? idFromUrl
+               : idFromChangesObject;
     }
   }
 }

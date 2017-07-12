@@ -27,7 +27,7 @@ namespace CleenApi.WebApi.Entities.Workspaces
 
     public User AddUser(int workspaceId, UserChanges userChanges)
     {
-      User user = GetUsersSet(workspaceId).Update(userChanges);
+      User user = GetUsersSet(workspaceId).Create(userChanges);
 
       Workspace workspace = Get(workspaceId);
       workspace.Users.Add(user);
