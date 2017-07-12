@@ -27,7 +27,8 @@ namespace CleenApi.WebApi.Entities.Users
 
     public bool IsValidEntity(User user)
     {
-      return !string.IsNullOrEmpty(user.GivenName) && !string.IsNullOrEmpty(user.Surname);
+      return !string.IsNullOrEmpty(user.GivenName)
+             && !string.IsNullOrEmpty(user.Surname);
     }
   }
 }

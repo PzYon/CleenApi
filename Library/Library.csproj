@@ -67,6 +67,7 @@
     <Compile Include="Sources\Exceptions\IInvalidRequestException.cs" />
     <Compile Include="Sources\Exceptions\InvalidConditionException.cs" />
     <Compile Include="Sources\Exceptions\InvalidEntityChangesException.cs" />
+    <Compile Include="Sources\Exceptions\InvalidRequestException.cs" />
     <Compile Include="Sources\Exceptions\InvalidSortFieldException.cs" />
     <Compile Include="Sources\Queries\EntitySetQuery.cs" />
     <Compile Include="Sources\Queries\LinqUtilities\BaseLinqUtility.cs" />

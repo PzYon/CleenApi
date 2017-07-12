@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using CleenApi.Library.EntitySets;
+using CleenApi.Library.Exceptions;
 using CleenApi.Library.Queries.LinqUtilities;
 
 namespace CleenApi.Library.Queries.QueryBuilders
@@ -12,7 +13,8 @@ namespace CleenApi.Library.Queries.QueryBuilders
   {
     protected readonly ILinqUtility LinqUtility = new TLinqUtility();
 
-    public virtual IQueryable<TEntity> Build(IQueryable<TEntity> queryable, EntitySetQuery query = null)
+    public virtual IQueryable<TEntity> Build(IQueryable<TEntity> queryable,
+                                             EntitySetQuery query = null)
     {
       queryable = ApplyDefaults(queryable);
 
@@ -27,6 +29,11 @@ namespace CleenApi.Library.Queries.QueryBuilders
 
       if (query.Skip > 0)
       {
+        if (!query.SortFields.Any())
+        {
+          throw new InvalidRequestException("$skip can only be applied in combination with $orderBy");
+        }
+
         queryable = queryable.Skip(query.Skip);
       }
 
@@ -45,7 +52,8 @@ namespace CleenApi.Library.Queries.QueryBuilders
       return queryable;
     }
 
-    public virtual IQueryable<TEntity> ApplyIncludes(IQueryable<TEntity> queryable, string[] includes)
+    public virtual IQueryable<TEntity> ApplyIncludes(IQueryable<TEntity> queryable,
+                                                     string[] includes)
     {
       foreach (string include in includes)
       {
