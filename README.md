@@ -11,8 +11,3 @@ Provides a generic, unified approach for building a REST API using ASP.NET WebAp
 - Treat entities as resources and hence force developers to think from a REST-persective
 - Controller logic is minimal and basically only handles the routes to the resources
 - Provide typed interfaces for adding/updating entities
-
-## Next Steps
-- HATEOAS
-- Further improvements in queries (e.g. number comparison, groups [and/or], etc.)
-- ...
