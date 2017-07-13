@@ -39,13 +39,13 @@ namespace CleenApi.WebApi.Entities.Workspaces
 
     public UserEntitySet GetUsersSet(int workspaceId)
     {
-      IQueryable<User> users = GetByIdQuerable(workspaceId).SelectMany(w => w.Users);
+      IQueryable<User> users = GetByIdQueryable(workspaceId).SelectMany(w => w.Users);
       return new UserEntitySet(Db, users);
     }
 
     public LocationEntitySet GetLocationsSet(int workspaceId)
     {
-      IQueryable<Location> locations = GetByIdQuerable(workspaceId).SelectMany(w => w.Locations);
+      IQueryable<Location> locations = GetByIdQueryable(workspaceId).SelectMany(w => w.Locations);
       return new LocationEntitySet(Db, locations);
     }
   }

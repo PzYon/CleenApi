@@ -44,18 +44,6 @@ namespace CleenApi.Library.EntitySets
       return QueryBuilder.Build(Entities, query);
     }
 
-    public TEntity Update(TEntityChanges entityChanges, int id = 0)
-    {
-      if (entityChanges == null)
-      {
-        throw new EntityProcessingException<TEntity>("EntityChanges are null or cannot be parsed.");
-      }
-
-      int validId = EnsureValidId(id, entityChanges.Id);
-
-      return ApplyChangesAndStore(entityChanges, Get(validId));
-    }
-
     public TEntity Create(TEntityChanges entityChanges)
     {
       if (entityChanges == null)
@@ -65,13 +53,35 @@ namespace CleenApi.Library.EntitySets
 
       if (entityChanges.Id > 0)
       {
-        throw  new EntityProcessingException<TEntity>("Cannot add an entity that already has an Id.");
+        throw new EntityProcessingException<TEntity>("Cannot add an entity that already has an Id.");
       }
 
-      return ApplyChangesAndStore(entityChanges, Create());
+      return ApplyValuesAndPersist(entityChanges, Create());
     }
 
-    private TEntity ApplyChangesAndStore(TEntityChanges entityChanges, TEntity entity)
+    public TEntity Update(TEntityChanges entityChanges, int id = 0)
+    {
+      if (entityChanges == null)
+      {
+        throw new EntityProcessingException<TEntity>("EntityChanges are null or cannot be parsed.");
+      }
+
+      int validId = EnsureValidId(id, entityChanges.Id);
+
+      return ApplyValuesAndPersist(entityChanges, Get(validId));
+    }
+
+    public void Delete(int id)
+    {
+      Delete(Get(id));
+    }
+
+    protected IQueryable<TEntity> GetByIdQueryable(int id)
+    {
+      return Get().Where(e => e.Id == id).Take(1);
+    }
+
+    private TEntity ApplyValuesAndPersist(TEntityChanges entityChanges, TEntity entity)
     {
       entity = entityChanges.ApplyValues(entity);
 
@@ -81,16 +91,6 @@ namespace CleenApi.Library.EntitySets
       }
 
       return Store(entity);
-    }
-
-    public void Delete(int id)
-    {
-      Delete(Get(id));
-    }
-
-    protected IQueryable<TEntity> GetByIdQuerable(int id)
-    {
-      return Get().Where(e => e.Id == id).Take(1);
     }
 
     private static int EnsureValidId(int idFromUrl, int idFromChangesObject)

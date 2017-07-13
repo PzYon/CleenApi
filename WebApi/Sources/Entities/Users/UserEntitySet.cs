@@ -19,7 +19,7 @@ namespace CleenApi.WebApi.Entities.Users
 
     public LocationEntitySet GetLocationsSet(int userId)
     {
-      IQueryable<Location> locations = GetByIdQuerable(userId).SelectMany(u => u.Locations);
+      IQueryable<Location> locations = GetByIdQueryable(userId).SelectMany(u => u.Locations);
       return new LocationEntitySet(Db, locations);
     }
   }
