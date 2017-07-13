@@ -28,27 +28,27 @@ namespace CleenApi.Library.Web.Controllers
       }
     }
 
-    public TEntity Get(int id)
+    public virtual TEntity Get(int id)
     {
       return EntitySet.Get(id, Query?.Includes);
     }
 
-    public TEntity[] Get()
+    public virtual TEntity[] Get()
     {
       return EntitySet.Get(Query).ToArray();
     }
 
-    public TEntity Put([FromBody] TEntityChanges entityChanges, int id = 0)
+    public virtual TEntity Put([FromBody] TEntityChanges entityChanges, int id = 0)
     {
       return EntitySet.Update(entityChanges, id);
     }
 
-    public TEntity Post([FromBody] TEntityChanges entityChanges)
+    public virtual TEntity Post([FromBody] TEntityChanges entityChanges)
     {
       return EntitySet.Create(entityChanges);
     }
 
-    public void Delete(int id)
+    public virtual void Delete(int id)
     {
       EntitySet.Delete(id);
     }
