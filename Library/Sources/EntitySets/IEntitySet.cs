@@ -10,7 +10,7 @@ namespace CleenApi.Library.EntitySets
   {
     TEntity Get(int id, string[] includes);
 
-    IQueryable<TEntity> Get(EntitySetQuery query);
+    IQueryable<TEntity> Get(IEntitySetQuery query);
 
     TEntity Update(TEntityChanges entityChanges, int id = 0);
 

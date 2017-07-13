@@ -4,33 +4,46 @@ using System.Linq;
 
 namespace CleenApi.Library.Queries
 {
-  public class EntitySetQuery
+  public class EntitySetQuery : IEntitySetQuery
   {
+    public static class UrlKeys
+    {
+      public const string Skip = "$skip";
+      public const string Take = "$take";
+      public const string OrderBy = "$orderBy";
+      public const string Select = "$select";
+    }
+
     public int Take { get; }
 
     public int Skip { get; }
 
-    public Dictionary<string, string> Conditions = new Dictionary<string, string>();
+    public Dictionary<string, string> Conditions { get; } = new Dictionary<string, string>();
 
-    public Dictionary<string, SortDirection> SortFields = new Dictionary<string, SortDirection>();
+    public Dictionary<string, SortDirection> SortFields { get; } = new Dictionary<string, SortDirection>();
 
-    public string[] Includes = new string[0];
+    public string[] Includes { get; } = new string[0];
 
     public EntitySetQuery(IEnumerable<KeyValuePair<string, string>> pairs)
     {
+      if (pairs == null)
+      {
+        return;
+      }
+
       foreach (KeyValuePair<string, string> pair in pairs)
       {
         switch (pair.Key)
         {
-          case "$skip":
+          case UrlKeys.Skip:
             Skip = Convert.ToInt32(pair.Value);
             break;
 
-          case "$take":
+          case UrlKeys.Take:
             Take = Convert.ToInt32(pair.Value);
             break;
 
-          case "$orderBy":
+          case UrlKeys.OrderBy:
             foreach (string sortField in pair.Value.Split(',').Select(v => v.Trim()))
             {
               if (sortField.StartsWith("-"))
@@ -44,7 +57,7 @@ namespace CleenApi.Library.Queries
             }
             break;
 
-          case "$select":
+          case UrlKeys.Select:
             Includes = pair.Value
                            .Split(',')
                            .Select(v => v.Trim())
@@ -59,7 +72,7 @@ namespace CleenApi.Library.Queries
       }
     }
 
-    private string ToUpperCamelCase(string value)
+    private static string ToUpperCamelCase(string value)
     {
       if (string.IsNullOrEmpty(value))
       {

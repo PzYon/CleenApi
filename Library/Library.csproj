@@ -70,6 +70,7 @@
     <Compile Include="Sources\Exceptions\InvalidRequestException.cs" />
     <Compile Include="Sources\Exceptions\InvalidSortFieldException.cs" />
     <Compile Include="Sources\Queries\EntitySetQuery.cs" />
+    <Compile Include="Sources\Queries\IEntitySetQuery.cs" />
     <Compile Include="Sources\Queries\LinqUtilities\BaseLinqUtility.cs" />
     <Compile Include="Sources\Queries\LinqUtilities\DbLinqUtility.cs" />
     <Compile Include="Sources\Queries\LinqUtilities\DefaultLinqUtility.cs" />

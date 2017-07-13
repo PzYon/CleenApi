@@ -5,7 +5,7 @@ namespace CleenApi.Library.Queries.QueryBuilders
 {
   public interface IEntityQueryBuilder<TEntity> where TEntity : IEntity
   {
-    IQueryable<TEntity> Build(IQueryable<TEntity> queryable, EntitySetQuery entitySetQuery);
+    IQueryable<TEntity> Build(IQueryable<TEntity> queryable, IEntitySetQuery entitySetQuery);
 
     IQueryable<TEntity> ApplyIncludes(IQueryable<TEntity> queryable, string[] propertiesToInclude);
 

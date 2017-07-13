@@ -39,7 +39,7 @@ namespace CleenApi.Library.EntitySets
       return entity;
     }
 
-    public IQueryable<TEntity> Get(EntitySetQuery query = null)
+    public IQueryable<TEntity> Get(IEntitySetQuery query = null)
     {
       return QueryBuilder.Build(Entities, query);
     }

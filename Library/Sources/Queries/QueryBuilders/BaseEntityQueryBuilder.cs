@@ -14,7 +14,7 @@ namespace CleenApi.Library.Queries.QueryBuilders
     protected readonly ILinqUtility LinqUtility = new TLinqUtility();
 
     public virtual IQueryable<TEntity> Build(IQueryable<TEntity> queryable,
-                                             EntitySetQuery query = null)
+                                             IEntitySetQuery query = null)
     {
       queryable = ApplyDefaults(queryable);
 
