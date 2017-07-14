@@ -1,8 +1,9 @@
 # CleenApi
 
 Provides a generic, unified approach for building a REST API using ASP.NET WebApi and Entity Framework.
-- The `Library`-project defines the main the interfaces and base classes that can be using when building a Cleen API
-- The `WebApi`- provides a simple implementation example
+- The `Library`-project defines the common interfaces and base classes that can be using when building a Cleen API
+- The `Library.Tests`-project defines unit tests for the `Library`-project
+- The `WebApi`-project provides a simple implementation example
 
 ## Philosophy
 - Unified approach for users of the API by providing the same operators on all entities (top, take, order by, filter, etc.)
