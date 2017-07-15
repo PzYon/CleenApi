@@ -11,7 +11,7 @@ namespace CleenApi.Library.Tests.BaseEntitySetTests
     [ExpectedException(typeof(EntityProcessingException<TestEntity>))]
     public void WithId_Throws()
     {
-      new TestEntitySet().Create(new TestEntityChanges {Id = 1});
+      new TestEntitySet(TestEntitiesRepo.DefaultEntities).Create(new TestEntityChanges {Id = 1});
     }
 
     [TestMethod]
@@ -23,7 +23,7 @@ namespace CleenApi.Library.Tests.BaseEntitySetTests
           Stage = Stage.Gamma
         };
 
-      TestEntity createdEntity = new TestEntitySet().Create(changes);
+      TestEntity createdEntity = new TestEntitySet(TestEntitiesRepo.DefaultEntities).Create(changes);
 
       Assert.AreEqual(changes.Name, createdEntity.Name);
       Assert.AreEqual(changes.Stage, createdEntity.Stage);

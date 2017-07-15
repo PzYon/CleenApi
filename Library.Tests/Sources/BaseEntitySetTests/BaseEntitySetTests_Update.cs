@@ -18,7 +18,7 @@ namespace CleenApi.Library.Tests.BaseEntitySetTests
     [ExpectedException(typeof(EntityProcessingException<TestEntity>))]
     public void EntityChanges_IdMismatch_Throws()
     {
-      new TestEntitySet().Update(new TestEntityChanges {Id = 1}, 2);
+      new TestEntitySet(TestEntitiesRepo.DefaultEntities).Update(new TestEntityChanges {Id = 1}, 2);
     }
 
     [TestMethod]
@@ -30,7 +30,7 @@ namespace CleenApi.Library.Tests.BaseEntitySetTests
           Stage = Stage.Gamma
         };
 
-      TestEntity changedEntity = new TestEntitySet().Update(changes, 1);
+      TestEntity changedEntity = new TestEntitySet(TestEntitiesRepo.DefaultEntities).Update(changes, 1);
 
       Assert.AreEqual(changes.Name, changedEntity.Name);
       Assert.AreEqual(changes.Stage, changedEntity.Stage);

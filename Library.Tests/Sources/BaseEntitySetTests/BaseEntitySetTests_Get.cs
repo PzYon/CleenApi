@@ -17,15 +17,15 @@ namespace CleenApi.Library.Tests.BaseEntitySetTests
     [TestMethod]
     public void ById()
     {
-      Assert.AreEqual(new TestEntitySet().Get(1),
-                      TestEntitiesRepo.Entities.FirstOrDefault(e => e.Id == 1));
+      Assert.AreEqual(new TestEntitySet(TestEntitiesRepo.DefaultEntities).Get(1),
+                      TestEntitiesRepo.DefaultEntities.FirstOrDefault(e => e.Id == 1));
     }
 
     [TestMethod]
     [ExpectedException(typeof(EntityNotFoundException<TestEntity>))]
     public void ById_ThrowsNotFoundException()
     {
-      new TestEntitySet().Get(999);
+      new TestEntitySet(TestEntitiesRepo.DefaultEntities).Get(999);
     }
 
     [TestMethod]
@@ -34,7 +34,7 @@ namespace CleenApi.Library.Tests.BaseEntitySetTests
       var q = new TestEntitySetQuery();
       q.Conditions.Add(nameof(TestEntity.Name), "*a*");
 
-      TestEntity[] entities = new TestEntitySet().Get(q).ToArray();
+      TestEntity[] entities = new TestEntitySet(TestEntitiesRepo.DefaultEntities).Get(q).ToArray();
 
       Assert.IsTrue(entities.All(e => e.Name.Contains("a")));
     }
@@ -45,7 +45,7 @@ namespace CleenApi.Library.Tests.BaseEntitySetTests
       var q = new TestEntitySetQuery();
       q.Conditions.Add(nameof(TestEntity.Name), "r");
 
-      TestEntity[] entities = new TestEntitySet().Get(q).ToArray();
+      TestEntity[] entities = new TestEntitySet(TestEntitiesRepo.DefaultEntities).Get(q).ToArray();
 
       Assert.IsTrue(entities.All(e => e.Name.EndsWith("r", StringComparison.OrdinalIgnoreCase)));
     }
@@ -56,7 +56,7 @@ namespace CleenApi.Library.Tests.BaseEntitySetTests
       var q = new TestEntitySetQuery();
       q.Conditions.Add(nameof(TestEntity.Name), "r*");
 
-      TestEntity[] entities = new TestEntitySet().Get(q).ToArray();
+      TestEntity[] entities = new TestEntitySet(TestEntitiesRepo.DefaultEntities).Get(q).ToArray();
 
       Assert.IsTrue(entities.All(e => e.Name.StartsWith("r", StringComparison.OrdinalIgnoreCase)));
     }
@@ -67,9 +67,9 @@ namespace CleenApi.Library.Tests.BaseEntitySetTests
       var q = new TestEntitySetQuery();
       q.SortFields.Add(nameof(TestEntity.Name), SortDirection.Ascending);
 
-      TestEntity[] entities = new TestEntitySet().Get(q).ToArray();
+      TestEntity[] entities = new TestEntitySet(TestEntitiesRepo.DefaultEntities).Get(q).ToArray();
 
-      TestEntity[] sorted = TestEntitiesRepo.Entities.OrderBy(t => t.Name).ToArray();
+      TestEntity[] sorted = TestEntitiesRepo.DefaultEntities.OrderBy(t => t.Name).ToArray();
       for (var i = 0; i < entities.Length; i++)
       {
         Assert.AreEqual(sorted[i], entities[i]);
@@ -82,9 +82,9 @@ namespace CleenApi.Library.Tests.BaseEntitySetTests
       var q = new TestEntitySetQuery();
       q.SortFields.Add(nameof(TestEntity.Id), SortDirection.Descending);
 
-      TestEntity[] entities = new TestEntitySet().Get(q).ToArray();
+      TestEntity[] entities = new TestEntitySet(TestEntitiesRepo.DefaultEntities).Get(q).ToArray();
 
-      TestEntity[] sorted = TestEntitiesRepo.Entities.OrderByDescending(t => t.Id).ToArray();
+      TestEntity[] sorted = TestEntitiesRepo.DefaultEntities.OrderByDescending(t => t.Id).ToArray();
       for (var i = 0; i < entities.Length; i++)
       {
         Assert.AreEqual(sorted[i], entities[i]);
@@ -97,7 +97,7 @@ namespace CleenApi.Library.Tests.BaseEntitySetTests
       var q = new TestEntitySetQuery();
       q.Conditions.Add(nameof(TestEntity.Name), "MichGitt'sSicherNöd");
 
-      TestEntity[] entities = new TestEntitySet().Get(q).ToArray();
+      TestEntity[] entities = new TestEntitySet(TestEntitiesRepo.DefaultEntities).Get(q).ToArray();
 
       Assert.AreEqual(0, entities.Length);
     }
@@ -108,7 +108,7 @@ namespace CleenApi.Library.Tests.BaseEntitySetTests
     {
       var q = new TestEntitySetQuery {Skip = 1};
 
-      TestEntity[] entities = new TestEntitySet().Get(q).ToArray();
+      TestEntity[] entities = new TestEntitySet(TestEntitiesRepo.DefaultEntities).Get(q).ToArray();
     }
 
     [TestMethod]
@@ -117,9 +117,9 @@ namespace CleenApi.Library.Tests.BaseEntitySetTests
       var q = new TestEntitySetQuery {Skip = 1};
       q.SortFields.Add(nameof(TestEntity.Name), SortDirection.Descending);
 
-      TestEntity[] entities = new TestEntitySet().Get(q).ToArray();
+      TestEntity[] entities = new TestEntitySet(TestEntitiesRepo.DefaultEntities).Get(q).ToArray();
 
-      Assert.AreEqual(TestEntitiesRepo.Entities.Count - 1, entities.Length);
+      Assert.AreEqual(TestEntitiesRepo.DefaultEntities.Count - 1, entities.Length);
     }
 
     [TestMethod]
@@ -130,7 +130,7 @@ namespace CleenApi.Library.Tests.BaseEntitySetTests
       var q = new TestEntitySetQuery {Take = expected};
       q.SortFields.Add(nameof(TestEntity.Name), SortDirection.Descending);
 
-      TestEntity[] entities = new TestEntitySet().Get(q).ToArray();
+      TestEntity[] entities = new TestEntitySet(TestEntitiesRepo.DefaultEntities).Get(q).ToArray();
 
       Assert.AreEqual(expected, entities.Length);
     }

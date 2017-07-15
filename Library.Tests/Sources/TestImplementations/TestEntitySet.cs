@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using CleenApi.Library.EntitySets;
 
@@ -5,11 +6,18 @@ namespace CleenApi.Library.Tests.TestImplementations
 {
   public class TestEntitySet : BaseEntitySet<TestEntity, TestEntityChanges, TestEntityQueryBuilder>
   {
-    protected override IQueryable<TestEntity> Entities => TestEntitiesRepo.Entities.AsQueryable();
+    protected override IQueryable<TestEntity> Entities => RepoEntities.AsQueryable();
+
+    public List<TestEntity> RepoEntities { get; }
 
     protected override TestEntity Create()
     {
       return new TestEntity();
+    }
+
+    public TestEntitySet(List<TestEntity> repoEntities)
+    {
+      RepoEntities = repoEntities;
     }
 
     protected override TestEntity Store(TestEntity entity)
@@ -21,16 +29,16 @@ namespace CleenApi.Library.Tests.TestImplementations
       }
       else
       {
-        TestEntitiesRepo.Entities.Remove(TestEntitiesRepo.Entities.First(e => e.Id == entity.Id));
+        RepoEntities.Remove(RepoEntities.First(e => e.Id == entity.Id));
       }
 
-      TestEntitiesRepo.Entities.Add(entity);
+      RepoEntities.Add(entity);
       return entity;
     }
 
     protected override void Delete(TestEntity entity)
     {
-      TestEntitiesRepo.Entities.Remove(entity);
+      RepoEntities.Remove(entity);
     }
 
     public override void Dispose()

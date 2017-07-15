@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Sources\BaseEntitySetTests\BaseEntitySetTests_Create.cs" />
+    <Compile Include="Sources\BaseEntitySetTests\BaseEntitySetTests_ApplyChanges.cs" />
     <Compile Include="Sources\BaseEntitySetTests\BaseEntitySetTests_Update.cs" />
     <Compile Include="Sources\TestImplementations\TestEntitySetQuery.cs" />
     <Compile Include="Sources\TestImplementations\Stage.cs" />
