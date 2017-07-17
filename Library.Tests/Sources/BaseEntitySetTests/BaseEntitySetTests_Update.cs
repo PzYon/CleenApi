@@ -4,9 +4,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CleenApi.Library.Tests.BaseEntitySetTests
 {
-  // todo: global:
-  // - test Defaults are considered
-
   [TestClass]
   public class BaseEntitySetTests_Update
   {

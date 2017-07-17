@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -17,21 +18,19 @@ namespace CleenApi.Library.Queries.LinqUtilities
       PropertyInfo pi = GetProperty<TEntity>(propertyName);
       Type propertyType = pi.PropertyType;
 
-      object convertedValue = ValueConverter.Convert(value, propertyType);
+      ParameterExpression parameterExpression = CreateParameterExpression(typeof(TEntity));
+      MemberExpression memberExpression = Expression.Property(parameterExpression, pi);
 
-      ParameterExpression param = Expression.Parameter(typeof(TEntity));
-      MemberExpression memberExpression = Expression.Property(param, pi);
+      Expression<Func<TEntity, bool>> e = propertyType == typeof(string)
+                                            ? BuildStringCondition<TEntity>(value,
+                                                                            memberExpression,
+                                                                            parameterExpression)
+                                            : BuildEqualCondition<TEntity>(ValueConverter.Convert(value, propertyType),
+                                                                           memberExpression,
+                                                                           parameterExpression,
+                                                                           propertyType);
 
-      Expression<Func<TEntity, bool>> expression = propertyType == typeof(string)
-                                                     ? BuildStringCondition<TEntity>(value,
-                                                                                     memberExpression,
-                                                                                     param)
-                                                     : BuildEqualCondition<TEntity>(convertedValue,
-                                                                                    memberExpression,
-                                                                                    param,
-                                                                                    propertyType);
-
-      return queryable.Where(expression).AsQueryable();
+      return queryable.Where(e).AsQueryable();
     }
 
     public IQueryable<TEntity> OrderBy<TEntity>(IQueryable<TEntity> queryable,
@@ -42,8 +41,9 @@ namespace CleenApi.Library.Queries.LinqUtilities
       Type type = typeof(TEntity);
       PropertyInfo pi = GetProperty<TEntity>(propertyName);
 
-      ParameterExpression parameter = Expression.Parameter(type, "p");
-      LambdaExpression orderByExp = Expression.Lambda(Expression.MakeMemberAccess(parameter, pi), parameter);
+      ParameterExpression parameterExpression = CreateParameterExpression(type);
+      LambdaExpression orderByExp = Expression.Lambda(Expression.MakeMemberAccess(parameterExpression, pi),
+                                                      parameterExpression);
 
       string methodName = sortDirection == SortDirection.Ascending
                             ? (isAlreadySorted
@@ -62,14 +62,32 @@ namespace CleenApi.Library.Queries.LinqUtilities
       return queryable.Provider.CreateQuery<TEntity>(orderByExpression);
     }
 
+    public IQueryable<TEntity> FullText<TEntity>(IQueryable<TEntity> queryable,
+                                                 string fullText,
+                                                 IEnumerable<string> propertiesToExclude)
+    {
+      Type type = typeof(TEntity);
+      ParameterExpression parameterExpression = CreateParameterExpression(type);
+
+      return queryable.Where(type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                                 .Where(p => p.PropertyType == typeof(string)
+                                             && !propertiesToExclude.Contains(p.Name))
+                                 .Select(p => BuildStringCondition<TEntity>("*" + fullText + "*",
+                                                                            Expression.Property(parameterExpression,
+                                                                                                p),
+                                                                            parameterExpression))
+                                 .Aggregate((l, r) => CreateOrExpression(l, r, parameterExpression)))
+                      .AsQueryable();
+    }
+
     public Expression<Func<TEntity, bool>> BuildEqualCondition<TEntity>(object value,
                                                                         MemberExpression memberExpression,
-                                                                        ParameterExpression param,
+                                                                        ParameterExpression parameterExpression,
                                                                         Type propertyType)
     {
       return Expression.Lambda<Func<TEntity, bool>>(Expression.Equal(memberExpression,
                                                                      Expression.Constant(value, propertyType)),
-                                                    param);
+                                                    parameterExpression);
     }
 
     protected static PropertyInfo GetProperty<TEntity>(string name)
@@ -81,6 +99,18 @@ namespace CleenApi.Library.Queries.LinqUtilities
       }
 
       return pi;
+    }
+
+    protected static ParameterExpression CreateParameterExpression(Type type)
+    {
+      return Expression.Parameter(type, type.Name.ToLower());
+    }
+
+    private static Expression<Func<TEntity, bool>> CreateOrExpression<TEntity>(Expression<Func<TEntity, bool>> left,
+                                                                               Expression<Func<TEntity, bool>> right,
+                                                                               ParameterExpression param)
+    {
+      return Expression.Lambda<Func<TEntity, bool>>(Expression.Or(left.Body, right.Body), param);
     }
   }
 }

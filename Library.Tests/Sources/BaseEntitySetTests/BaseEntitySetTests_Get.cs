@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using CleenApi.Library.Exceptions;
 using CleenApi.Library.Queries;
@@ -17,8 +18,10 @@ namespace CleenApi.Library.Tests.BaseEntitySetTests
     [TestMethod]
     public void ById()
     {
-      Assert.AreEqual(new TestEntitySet(TestEntitiesRepo.DefaultEntities).Get(1),
-                      TestEntitiesRepo.DefaultEntities.FirstOrDefault(e => e.Id == 1));
+      var testEntitySet = new TestEntitySet(TestEntitiesRepo.DefaultEntities);
+
+      Assert.AreEqual(testEntitySet.Get(1),
+                      testEntitySet.RepoEntities.FirstOrDefault(e => e.Id == 1));
     }
 
     [TestMethod]
@@ -64,12 +67,14 @@ namespace CleenApi.Library.Tests.BaseEntitySetTests
     [TestMethod]
     public void ByQuery_OrderByAscending()
     {
+      var testEntitySet = new TestEntitySet(TestEntitiesRepo.DefaultEntities);
+
       var q = new TestEntitySetQuery();
       q.SortFields.Add(nameof(TestEntity.Name), SortDirection.Ascending);
 
-      TestEntity[] entities = new TestEntitySet(TestEntitiesRepo.DefaultEntities).Get(q).ToArray();
+      TestEntity[] entities = testEntitySet.Get(q).ToArray();
 
-      TestEntity[] sorted = TestEntitiesRepo.DefaultEntities.OrderBy(t => t.Name).ToArray();
+      TestEntity[] sorted = testEntitySet.RepoEntities.OrderBy(t => t.Name).ToArray();
       for (var i = 0; i < entities.Length; i++)
       {
         Assert.AreEqual(sorted[i], entities[i]);
@@ -79,12 +84,14 @@ namespace CleenApi.Library.Tests.BaseEntitySetTests
     [TestMethod]
     public void ByQuery_OrderByDescending()
     {
+      var testEntitySet = new TestEntitySet(TestEntitiesRepo.DefaultEntities);
+
       var q = new TestEntitySetQuery();
       q.SortFields.Add(nameof(TestEntity.Id), SortDirection.Descending);
 
-      TestEntity[] entities = new TestEntitySet(TestEntitiesRepo.DefaultEntities).Get(q).ToArray();
+      TestEntity[] entities = testEntitySet.Get(q).ToArray();
 
-      TestEntity[] sorted = TestEntitiesRepo.DefaultEntities.OrderByDescending(t => t.Id).ToArray();
+      TestEntity[] sorted = testEntitySet.RepoEntities.OrderByDescending(t => t.Id).ToArray();
       for (var i = 0; i < entities.Length; i++)
       {
         Assert.AreEqual(sorted[i], entities[i]);
@@ -114,18 +121,20 @@ namespace CleenApi.Library.Tests.BaseEntitySetTests
     [TestMethod]
     public void Skip()
     {
+      var testEntitySet = new TestEntitySet(TestEntitiesRepo.DefaultEntities);
+
       var q = new TestEntitySetQuery {Skip = 1};
       q.SortFields.Add(nameof(TestEntity.Name), SortDirection.Descending);
 
-      TestEntity[] entities = new TestEntitySet(TestEntitiesRepo.DefaultEntities).Get(q).ToArray();
+      TestEntity[] entities = testEntitySet.Get(q).ToArray();
 
-      Assert.AreEqual(TestEntitiesRepo.DefaultEntities.Count - 1, entities.Length);
+      Assert.AreEqual(testEntitySet.RepoEntities.Count - 1, entities.Length);
     }
 
     [TestMethod]
     public void Take()
     {
-      var expected = 2;
+      const int expected = 2;
 
       var q = new TestEntitySetQuery {Take = expected};
       q.SortFields.Add(nameof(TestEntity.Name), SortDirection.Descending);
@@ -133,6 +142,34 @@ namespace CleenApi.Library.Tests.BaseEntitySetTests
       TestEntity[] entities = new TestEntitySet(TestEntitiesRepo.DefaultEntities).Get(q).ToArray();
 
       Assert.AreEqual(expected, entities.Length);
+    }
+
+    [TestMethod]
+    public void FullText()
+    {
+      var q = new TestEntitySetQuery {FullText = "roger"};
+
+      IQueryable<TestEntity> testEntities = new TestEntitySet(TestEntitiesRepo.DefaultEntities).Get(q);
+      TestEntity[] entities = testEntities.ToArray();
+
+      Assert.AreEqual(2, entities.Length);
+    }
+
+    [TestMethod]
+    public void FullText_ConsidersExcludes()
+    {
+      var q = new TestEntitySetQuery {FullText = "roger"};
+
+      var repoEntities = new List<TestEntity>
+        {
+          new TestEntity(12, "Foo", Stage.Alpha, "Bar", "bla bla roger bla bla"),
+          new TestEntity(24, "Baz", Stage.Alpha, "Roger", "abc")
+        };
+
+      IQueryable<TestEntity> testEntities = new TestEntitySet(repoEntities).Get(q);
+      TestEntity[] entities = testEntities.ToArray();
+
+      Assert.AreEqual(1, entities.Length);
     }
   }
 }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 
 namespace CleenApi.Library.Queries.LinqUtilities
@@ -12,5 +13,9 @@ namespace CleenApi.Library.Queries.LinqUtilities
                                          string propertyName,
                                          SortDirection sortDirection,
                                          bool isAlreadySorted);
+
+    IQueryable<TEntity> FullText<TEntity>(IQueryable<TEntity> queryable,
+                                          string fullText,
+                                          IEnumerable<string> propertiesToExclude);
   }
 }

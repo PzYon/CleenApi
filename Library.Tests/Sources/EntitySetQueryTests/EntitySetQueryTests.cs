@@ -18,7 +18,8 @@ namespace CleenApi.Library.Tests.EntitySetQueryTests
           GetAsKvp(EntitySetQuery.UrlKeys.Skip, "1"),
           GetAsKvp(EntitySetQuery.UrlKeys.Take, "2"),
           GetAsKvp(EntitySetQuery.UrlKeys.OrderBy, "-Foo,Bar"),
-          GetAsKvp(EntitySetQuery.UrlKeys.Select, "Bli,Bla")
+          GetAsKvp(EntitySetQuery.UrlKeys.Select, "Bli,Bla"),
+          GetAsKvp(EntitySetQuery.UrlKeys.FullText, "miep")
         };
 
       var q = new EntitySetQuery(pairs);
@@ -34,6 +35,8 @@ namespace CleenApi.Library.Tests.EntitySetQueryTests
 
       Assert.IsTrue(q.Includes.Contains("Bli"));
       Assert.IsTrue(q.Includes.Contains("Bla"));
+
+      Assert.AreEqual("miep", q.FullText);
     }
 
     private KeyValuePair<string, string> GetAsKvp(string key, string value)

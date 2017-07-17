@@ -10,6 +10,8 @@ namespace CleenApi.Library.Queries
 
     Dictionary<string, string> Conditions { get; }
 
+    string FullText { get; }
+
     Dictionary<string, SortDirection> SortFields { get; }
 
     string[] Includes { get; }

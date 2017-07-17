@@ -16,18 +16,25 @@ namespace CleenApi.Library.Queries.LinqUtilities
 
       string methodName = GetStringMethodName(value);
 
-      Expression methodExpression = Expression.Call(memberExpression,
-                                                    stringType.GetMethod(methodName,
-                                                                         new[] {stringType, stringComparisonType}),
-                                                    Expression.Constant(conditionValue, stringType),
-                                                    Expression.Constant(StringComparison.OrdinalIgnoreCase));
+      Expression stringComparisonExpression = Expression.Call(memberExpression,
+                                                              stringType.GetMethod(methodName,
+                                                                                   new[]
+                                                                                     {
+                                                                                       stringType,
+                                                                                       stringComparisonType
+                                                                                     }),
+                                                              Expression.Constant(conditionValue, stringType),
+                                                              Expression.Constant(StringComparison.OrdinalIgnoreCase));
 
       if (methodName == nameof(string.IndexOf))
       {
-        methodExpression = Expression.GreaterThan(methodExpression, Expression.Constant(0, typeof(int)));
+        stringComparisonExpression = Expression.GreaterThan(stringComparisonExpression,
+                                                            Expression.Constant(-1, typeof(int)));
       }
 
-      return Expression.Lambda<Func<TEntity, bool>>(methodExpression, param);
+      BinaryExpression notNullExp = Expression.NotEqual(memberExpression, Expression.Constant(null));
+
+      return Expression.Lambda<Func<TEntity, bool>>(Expression.AndAlso(notNullExp, stringComparisonExpression), param);
     }
 
     private static string GetStringMethodName(string value)

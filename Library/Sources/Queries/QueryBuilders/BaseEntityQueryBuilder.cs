@@ -25,6 +25,7 @@ namespace CleenApi.Library.Queries.QueryBuilders
 
       queryable = ApplyIncludes(queryable, query.Includes);
       queryable = ApplyConditions(queryable, query.Conditions);
+      queryable = ApplyFullText(queryable, query.FullText);
       queryable = ApplyOrderBy(queryable, query.SortFields);
 
       if (query.Skip > 0)
@@ -50,6 +51,16 @@ namespace CleenApi.Library.Queries.QueryBuilders
       // do nothing by default. this could be used for conditions which are use for each
       // data access, e.g. permissions check
       return queryable;
+    }
+
+    public virtual IEnumerable<string> GetPropertiesToExcludeFromFullText()
+    {
+      yield break;
+    }
+
+    public IQueryable<TEntity> ApplyFullText(IQueryable<TEntity> queryable, string fullText)
+    {
+      return LinqUtility.FullText(queryable, fullText, GetPropertiesToExcludeFromFullText());
     }
 
     public virtual IQueryable<TEntity> ApplyIncludes(IQueryable<TEntity> queryable,

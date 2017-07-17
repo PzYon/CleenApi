@@ -12,6 +12,7 @@ namespace CleenApi.Library.Queries
       public const string Take = "$take";
       public const string OrderBy = "$orderBy";
       public const string Select = "$select";
+      public const string FullText = "q";
     }
 
     public int Take { get; }
@@ -19,6 +20,8 @@ namespace CleenApi.Library.Queries
     public int Skip { get; }
 
     public Dictionary<string, string> Conditions { get; } = new Dictionary<string, string>();
+
+    public string FullText { get; }
 
     public Dictionary<string, SortDirection> SortFields { get; } = new Dictionary<string, SortDirection>();
 
@@ -55,6 +58,10 @@ namespace CleenApi.Library.Queries
                 SortFields[ToUpperCamelCase(sortField)] = SortDirection.Ascending;
               }
             }
+            break;
+
+          case UrlKeys.FullText:
+            FullText = pair.Value;
             break;
 
           case UrlKeys.Select:

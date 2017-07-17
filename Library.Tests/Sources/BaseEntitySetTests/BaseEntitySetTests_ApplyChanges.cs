@@ -19,8 +19,6 @@ namespace CleenApi.Library.Tests.BaseEntitySetTests
         };
 
       TestEntity entity = new TestEntitySet(testEntities).Get(1);
-
-      Assert.IsTrue(entity == null);
     }
 
     [TestMethod]
