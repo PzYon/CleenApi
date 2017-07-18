@@ -35,7 +35,7 @@ namespace CleenApi.Library.Tests.BaseEntitySetTests
     public void ByQuery_String_Contains()
     {
       var q = new TestEntitySetQuery();
-      q.Conditions.Add(nameof(TestEntity.Name), "*a*");
+      q.Conditions.Add(nameof(TestEntity.Name), new EntityCondition(ConditionOperator.Contains, "a"));
 
       TestEntity[] entities = new TestEntitySet(TestEntitiesRepo.DefaultEntities).Get(q).ToArray();
 
@@ -46,7 +46,7 @@ namespace CleenApi.Library.Tests.BaseEntitySetTests
     public void ByQuery_String_EndsWith()
     {
       var q = new TestEntitySetQuery();
-      q.Conditions.Add(nameof(TestEntity.Name), "r");
+      q.Conditions.Add(nameof(TestEntity.Name), new EntityCondition(ConditionOperator.EndsWith, "r"));
 
       TestEntity[] entities = new TestEntitySet(TestEntitiesRepo.DefaultEntities).Get(q).ToArray();
 
@@ -54,10 +54,10 @@ namespace CleenApi.Library.Tests.BaseEntitySetTests
     }
 
     [TestMethod]
-    public void ByQuery_String_StartsWith()
+    public void ByQuery_String_BeginsWith()
     {
       var q = new TestEntitySetQuery();
-      q.Conditions.Add(nameof(TestEntity.Name), "r*");
+      q.Conditions.Add(nameof(TestEntity.Name), new EntityCondition(ConditionOperator.BeginsWith, "r"));
 
       TestEntity[] entities = new TestEntitySet(TestEntitiesRepo.DefaultEntities).Get(q).ToArray();
 
@@ -102,7 +102,7 @@ namespace CleenApi.Library.Tests.BaseEntitySetTests
     public void ByQuery_ReturnsEmpty()
     {
       var q = new TestEntitySetQuery();
-      q.Conditions.Add(nameof(TestEntity.Name), "MichGitt'sSicherNöd");
+      q.Conditions.Add(nameof(TestEntity.Name), new EntityCondition(ConditionOperator.Equals, "MichGitt'sSicherNöd"));
 
       TestEntity[] entities = new TestEntitySet(TestEntitiesRepo.DefaultEntities).Get(q).ToArray();
 

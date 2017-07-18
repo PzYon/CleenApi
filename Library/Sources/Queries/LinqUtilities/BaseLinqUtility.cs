@@ -10,11 +10,13 @@ namespace CleenApi.Library.Queries.LinqUtilities
 {
   public abstract class BaseLinqUtility : ILinqUtility
   {
-    protected abstract Expression<Func<TEntity, bool>> BuildStringCondition<TEntity>(string value,
+    protected abstract Expression<Func<TEntity, bool>> BuildStringCondition<TEntity>(EntityCondition condition,
                                                                                      MemberExpression memberExpression,
                                                                                      ParameterExpression param);
 
-    public IQueryable<TEntity> Where<TEntity>(IQueryable<TEntity> queryable, string propertyName, string value)
+    public IQueryable<TEntity> Where<TEntity>(IQueryable<TEntity> queryable,
+                                              string propertyName,
+                                              EntityCondition condition)
     {
       PropertyInfo pi = GetProperty<TEntity>(propertyName);
       Type propertyType = pi.PropertyType;
@@ -23,10 +25,11 @@ namespace CleenApi.Library.Queries.LinqUtilities
       MemberExpression memberExpression = Expression.Property(parameterExpression, pi);
 
       Expression<Func<TEntity, bool>> e = propertyType == typeof(string)
-                                            ? BuildStringCondition<TEntity>(value,
+                                            ? BuildStringCondition<TEntity>(condition,
                                                                             memberExpression,
                                                                             parameterExpression)
-                                            : BuildEqualCondition<TEntity>(ValueConverter.Convert(value, propertyType),
+                                            : BuildEqualCondition<TEntity>(ValueConverter.Convert(condition.Value,
+                                                                                                  propertyType),
                                                                            memberExpression,
                                                                            parameterExpression,
                                                                            propertyType);
@@ -67,13 +70,19 @@ namespace CleenApi.Library.Queries.LinqUtilities
                                                  string fullText,
                                                  IEnumerable<string> propertiesToExclude)
     {
+      if (string.IsNullOrEmpty(fullText))
+      {
+        return queryable;
+      }
+
       Type type = typeof(TEntity);
       ParameterExpression parameterExpression = CreateParameterExpression(type);
 
       return queryable.Where(type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
                                  .Where(p => p.PropertyType == typeof(string)
                                              && !propertiesToExclude.Contains(p.Name))
-                                 .Select(p => BuildStringCondition<TEntity>("*" + fullText + "*",
+                                 .Select(p => BuildStringCondition<TEntity>(new EntityCondition(ConditionOperator.Contains,
+                                                                                                fullText),
                                                                             Expression.Property(parameterExpression,
                                                                                                 p),
                                                                             parameterExpression))

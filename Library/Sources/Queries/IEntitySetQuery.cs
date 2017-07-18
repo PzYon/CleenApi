@@ -8,7 +8,7 @@ namespace CleenApi.Library.Queries
 
     int Skip { get; }
 
-    Dictionary<string, string> Conditions { get; }
+    Dictionary<string, EntityCondition> Conditions { get; }
 
     string FullText { get; }
 

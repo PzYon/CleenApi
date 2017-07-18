@@ -5,40 +5,37 @@ namespace CleenApi.Library.Queries.LinqUtilities
 {
   public class DbLinqUtility : BaseLinqUtility
   {
-    protected override Expression<Func<TEntity, bool>> BuildStringCondition<TEntity>(string value,
+    protected override Expression<Func<TEntity, bool>> BuildStringCondition<TEntity>(EntityCondition condition,
                                                                                      MemberExpression memberExpression,
                                                                                      ParameterExpression param)
     {
       Type stringType = typeof(string);
 
-      string conditionValue = value.TrimEnd('*').TrimStart('*');
+      string methodName = GetStringMethodName(condition.Operator);
 
       MethodCallExpression methodExpression = Expression.Call(memberExpression,
-                                                              stringType.GetMethod(GetStringMethodName(value),
-                                                                                   new[] {stringType}),
-                                                              Expression.Constant(conditionValue, stringType));
+                                                              stringType.GetMethod(methodName, new[] {stringType}),
+                                                              Expression.Constant(condition.Value, stringType));
 
       return Expression.Lambda<Func<TEntity, bool>>(methodExpression, param);
     }
 
-    private static string GetStringMethodName(string value)
+    private static string GetStringMethodName(ConditionOperator op)
     {
-      if (value.StartsWith("*") && value.EndsWith("*"))
+      switch (op)
       {
-        return nameof(string.Contains);
+        case ConditionOperator.Contains:
+          return nameof(string.Contains);
+        case ConditionOperator.BeginsWith:
+          return nameof(string.StartsWith);
+        case ConditionOperator.EndsWith:
+          return nameof(string.EndsWith);
+        case ConditionOperator.Equals:
+          return nameof(string.Equals);
+        case ConditionOperator.NotEquals:
+        default:
+          throw new ArgumentOutOfRangeException(nameof(op), op, null);
       }
-
-      if (value.EndsWith("*"))
-      {
-        return nameof(string.StartsWith);
-      }
-
-      if (value.StartsWith("*"))
-      {
-        return nameof(string.EndsWith);
-      }
-
-      return nameof(string.Equals);
     }
   }
 }

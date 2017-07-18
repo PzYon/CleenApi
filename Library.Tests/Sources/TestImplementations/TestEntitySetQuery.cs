@@ -9,7 +9,7 @@ namespace CleenApi.Library.Tests.TestImplementations
 
     public int Skip { get; set; }
 
-    public Dictionary<string, string> Conditions { get; set; } = new Dictionary<string, string>();
+    public Dictionary<string, EntityCondition> Conditions { get; set; } = new Dictionary<string, EntityCondition>();
 
     public string FullText { get; set; }
 
