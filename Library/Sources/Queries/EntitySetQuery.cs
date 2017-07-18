@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using CleenApi.Library.Utilities;
 
 namespace CleenApi.Library.Queries
 {
@@ -51,11 +52,11 @@ namespace CleenApi.Library.Queries
             {
               if (sortField.StartsWith("-"))
               {
-                SortFields[ToUpperCamelCase(sortField.Substring(1))] = SortDirection.Descending;
+                SortFields[StringUtility.ToUpperCamelCase(sortField.Substring(1))] = SortDirection.Descending;
               }
               else
               {
-                SortFields[ToUpperCamelCase(sortField)] = SortDirection.Ascending;
+                SortFields[StringUtility.ToUpperCamelCase(sortField)] = SortDirection.Ascending;
               }
             }
             break;
@@ -68,31 +69,15 @@ namespace CleenApi.Library.Queries
             Includes = pair.Value
                            .Split(',')
                            .Select(v => v.Trim())
-                           .Select(ToUpperCamelCase)
+                           .Select(StringUtility.ToUpperCamelCase)
                            .ToArray();
             break;
 
           default:
-            Conditions[ToUpperCamelCase(pair.Key)] = pair.Value;
+            Conditions[StringUtility.ToUpperCamelCase(pair.Key)] = pair.Value;
             break;
         }
       }
-    }
-
-    private static string ToUpperCamelCase(string value)
-    {
-      if (string.IsNullOrEmpty(value))
-      {
-        return value;
-      }
-
-      char firstChar = value[0];
-      if (char.IsUpper(firstChar))
-      {
-        return value;
-      }
-
-      return char.ToUpper(firstChar) + value.Substring(1);
     }
   }
 }

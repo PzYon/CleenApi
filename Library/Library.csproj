@@ -83,6 +83,7 @@
     <Compile Include="Sources\Queries\QueryBuilders\IEntityQueryBuilder.cs" />
     <Compile Include="Sources\Queries\SortDirection.cs" />
     <Compile Include="Sources\Queries\ValueConverter.cs" />
+    <Compile Include="Sources\Utilities\StringUtility.cs" />
     <Compile Include="Sources\Web\Controllers\BaseDbEntitySetController.cs" />
     <Compile Include="Sources\Web\Controllers\BaseEntitySetController.cs" />
   </ItemGroup>

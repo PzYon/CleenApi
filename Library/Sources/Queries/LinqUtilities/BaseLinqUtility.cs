@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using CleenApi.Library.Exceptions;
+using CleenApi.Library.Utilities;
 
 namespace CleenApi.Library.Queries.LinqUtilities
 {
@@ -103,7 +104,7 @@ namespace CleenApi.Library.Queries.LinqUtilities
 
     protected static ParameterExpression CreateParameterExpression(Type type)
     {
-      return Expression.Parameter(type, type.Name.ToLower());
+      return Expression.Parameter(type, StringUtility.ToCamelCase(type.Name));
     }
 
     private static Expression<Func<TEntity, bool>> CreateOrExpression<TEntity>(Expression<Func<TEntity, bool>> left,
