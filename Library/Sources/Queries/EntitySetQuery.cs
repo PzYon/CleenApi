@@ -16,11 +16,19 @@ namespace CleenApi.Library.Queries
       public const string FullText = "q";
     }
 
+    public static class Chars
+    {
+      public static readonly char WildCard = '*';
+      public static readonly char Separator = ',';
+      public static readonly char Descending = '-';
+      public static readonly char NotEqual = '!';
+    }
+
     public int Take { get; }
 
     public int Skip { get; }
 
-    public Dictionary<string, string> Conditions { get; } = new Dictionary<string, string>();
+    public Dictionary<string, EntityCondition> Conditions { get; } = new Dictionary<string, EntityCondition>();
 
     public string FullText { get; }
 
@@ -48,9 +56,9 @@ namespace CleenApi.Library.Queries
             break;
 
           case UrlKeys.OrderBy:
-            foreach (string sortField in pair.Value.Split(',').Select(v => v.Trim()))
+            foreach (string sortField in pair.Value.Split(Chars.Separator).Select(v => v.Trim()))
             {
-              if (sortField.StartsWith("-"))
+              if (sortField.StartsWith(Chars.Descending.ToString()))
               {
                 SortFields[StringUtility.ToUpperCamelCase(sortField.Substring(1))] = SortDirection.Descending;
               }
@@ -67,17 +75,47 @@ namespace CleenApi.Library.Queries
 
           case UrlKeys.Select:
             Includes = pair.Value
-                           .Split(',')
+                           .Split(Chars.Separator)
                            .Select(v => v.Trim())
                            .Select(StringUtility.ToUpperCamelCase)
                            .ToArray();
             break;
 
           default:
-            Conditions[StringUtility.ToUpperCamelCase(pair.Key)] = pair.Value;
+            Conditions[StringUtility.ToUpperCamelCase(pair.Key)] = GetEntityCondition(pair.Value);
             break;
         }
       }
+    }
+
+    private static EntityCondition GetEntityCondition(string value)
+    {
+      bool isEndsWith = value.StartsWith(Chars.WildCard.ToString());
+      bool isStartsWith = value.EndsWith(Chars.WildCard.ToString());
+      bool isContains = isStartsWith && isEndsWith;
+      bool isNotEquals = value.StartsWith(Chars.NotEqual.ToString());
+
+      if (isContains)
+      {
+        return new EntityCondition(ConditionOperator.Contains, value.Trim(Chars.WildCard));
+      }
+
+      if (isStartsWith)
+      {
+        return new EntityCondition(ConditionOperator.BeginsWith, value.TrimEnd(Chars.WildCard));
+      }
+
+      if (isEndsWith)
+      {
+        return new EntityCondition(ConditionOperator.EndsWith, value.TrimStart(Chars.WildCard));
+      }
+
+      if (isNotEquals)
+      {
+        return new EntityCondition(ConditionOperator.NotEqual, value.TrimStart(Chars.NotEqual));
+      }
+
+      return new EntityCondition(ConditionOperator.Equal, value);
     }
   }
 }

@@ -5,16 +5,14 @@ namespace CleenApi.Library.Queries.LinqUtilities
 {
   public class DefaultLinqUtility : BaseLinqUtility
   {
-    protected override Expression<Func<TEntity, bool>> BuildStringCondition<TEntity>(string value,
-                                                                                     MemberExpression memberExpression,
-                                                                                     ParameterExpression param)
+    protected override Expression<Func<TEntity, bool>> StringCondition<TEntity>(EntityCondition condition,
+                                                                                MemberExpression memberExpression,
+                                                                                ParameterExpression param)
     {
       Type stringType = typeof(string);
       Type stringComparisonType = typeof(StringComparison);
 
-      string conditionValue = value.TrimEnd('*').TrimStart('*');
-
-      string methodName = GetStringMethodName(value);
+      string methodName = GetStringMethodName(condition.Operator);
 
       Expression stringComparisonExpression = Expression.Call(memberExpression,
                                                               stringType.GetMethod(methodName,
@@ -23,13 +21,18 @@ namespace CleenApi.Library.Queries.LinqUtilities
                                                                                        stringType,
                                                                                        stringComparisonType
                                                                                      }),
-                                                              Expression.Constant(conditionValue, stringType),
+                                                              Expression.Constant(condition.Value, stringType),
                                                               Expression.Constant(StringComparison.OrdinalIgnoreCase));
 
-      if (methodName == nameof(string.IndexOf))
+      switch (condition.Operator)
       {
-        stringComparisonExpression = Expression.GreaterThan(stringComparisonExpression,
-                                                            Expression.Constant(-1, typeof(int)));
+        case ConditionOperator.Contains:
+          stringComparisonExpression = Expression.GreaterThan(stringComparisonExpression,
+                                                              Expression.Constant(-1, typeof(int)));
+          break;
+        case ConditionOperator.NotEqual:
+          stringComparisonExpression = Expression.Not(stringComparisonExpression);
+          break;
       }
 
       BinaryExpression notNullExp = Expression.NotEqual(memberExpression, Expression.Constant(null));
@@ -37,24 +40,22 @@ namespace CleenApi.Library.Queries.LinqUtilities
       return Expression.Lambda<Func<TEntity, bool>>(Expression.AndAlso(notNullExp, stringComparisonExpression), param);
     }
 
-    private static string GetStringMethodName(string value)
+    private static string GetStringMethodName(ConditionOperator op)
     {
-      if (value.StartsWith("*") && value.EndsWith("*"))
+      switch (op)
       {
-        return nameof(string.IndexOf);
+        case ConditionOperator.Contains:
+          return nameof(string.IndexOf);
+        case ConditionOperator.BeginsWith:
+          return nameof(string.StartsWith);
+        case ConditionOperator.EndsWith:
+          return nameof(string.EndsWith);
+        case ConditionOperator.Equal:
+        case ConditionOperator.NotEqual:
+          return nameof(string.Equals);
+        default:
+          throw new ArgumentOutOfRangeException(nameof(op), op, null);
       }
-
-      if (value.EndsWith("*"))
-      {
-        return nameof(string.StartsWith);
-      }
-
-      if (value.StartsWith("*"))
-      {
-        return nameof(string.EndsWith);
-      }
-
-      return nameof(string.Equals);
     }
   }
 }

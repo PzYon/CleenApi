@@ -5,40 +5,50 @@ namespace CleenApi.Library.Queries.LinqUtilities
 {
   public class DbLinqUtility : BaseLinqUtility
   {
-    protected override Expression<Func<TEntity, bool>> BuildStringCondition<TEntity>(string value,
-                                                                                     MemberExpression memberExpression,
-                                                                                     ParameterExpression param)
+    protected override Expression<Func<TEntity, bool>> StringCondition<TEntity>(EntityCondition condition,
+                                                                                MemberExpression memberExpression,
+                                                                                ParameterExpression param)
     {
       Type stringType = typeof(string);
 
-      string conditionValue = value.TrimEnd('*').TrimStart('*');
+      ConstantExpression valueExpression = Expression.Constant(condition.Value, stringType);
+      Expression expression;
 
-      MethodCallExpression methodExpression = Expression.Call(memberExpression,
-                                                              stringType.GetMethod(GetStringMethodName(value),
-                                                                                   new[] {stringType}),
-                                                              Expression.Constant(conditionValue, stringType));
+      switch (condition.Operator)
+      {
+        case ConditionOperator.NotEqual:
+          expression = Expression.NotEqual(memberExpression, valueExpression);
+          break;
 
-      return Expression.Lambda<Func<TEntity, bool>>(methodExpression, param);
+        case ConditionOperator.Equal:
+          expression = Expression.Equal(memberExpression, valueExpression);
+          break;
+
+        default:
+
+          expression = Expression.Call(memberExpression,
+                                       stringType.GetMethod(GetStringMethodName(condition.Operator),
+                                                            new[] {stringType}),
+                                       valueExpression);
+          break;
+      }
+
+      return Expression.Lambda<Func<TEntity, bool>>(expression, param);
     }
 
-    private static string GetStringMethodName(string value)
+    private static string GetStringMethodName(ConditionOperator op)
     {
-      if (value.StartsWith("*") && value.EndsWith("*"))
+      switch (op)
       {
-        return nameof(string.Contains);
+        case ConditionOperator.Contains:
+          return nameof(string.Contains);
+        case ConditionOperator.BeginsWith:
+          return nameof(string.StartsWith);
+        case ConditionOperator.EndsWith:
+          return nameof(string.EndsWith);
+        default:
+          throw new ArgumentOutOfRangeException(nameof(op), op, null);
       }
-
-      if (value.EndsWith("*"))
-      {
-        return nameof(string.StartsWith);
-      }
-
-      if (value.StartsWith("*"))
-      {
-        return nameof(string.EndsWith);
-      }
-
-      return nameof(string.Equals);
     }
   }
 }

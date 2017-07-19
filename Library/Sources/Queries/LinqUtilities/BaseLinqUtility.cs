@@ -10,11 +10,13 @@ namespace CleenApi.Library.Queries.LinqUtilities
 {
   public abstract class BaseLinqUtility : ILinqUtility
   {
-    protected abstract Expression<Func<TEntity, bool>> BuildStringCondition<TEntity>(string value,
-                                                                                     MemberExpression memberExpression,
-                                                                                     ParameterExpression param);
+    protected abstract Expression<Func<TEntity, bool>> StringCondition<TEntity>(EntityCondition condition,
+                                                                                MemberExpression memberExpression,
+                                                                                ParameterExpression param);
 
-    public IQueryable<TEntity> Where<TEntity>(IQueryable<TEntity> queryable, string propertyName, string value)
+    public IQueryable<TEntity> Where<TEntity>(IQueryable<TEntity> queryable,
+                                              string propertyName,
+                                              EntityCondition condition)
     {
       PropertyInfo pi = GetProperty<TEntity>(propertyName);
       Type propertyType = pi.PropertyType;
@@ -23,13 +25,13 @@ namespace CleenApi.Library.Queries.LinqUtilities
       MemberExpression memberExpression = Expression.Property(parameterExpression, pi);
 
       Expression<Func<TEntity, bool>> e = propertyType == typeof(string)
-                                            ? BuildStringCondition<TEntity>(value,
-                                                                            memberExpression,
-                                                                            parameterExpression)
-                                            : BuildEqualCondition<TEntity>(ValueConverter.Convert(value, propertyType),
-                                                                           memberExpression,
-                                                                           parameterExpression,
-                                                                           propertyType);
+                                            ? StringCondition<TEntity>(condition,
+                                                                       memberExpression,
+                                                                       parameterExpression)
+                                            : Condition<TEntity>(condition,
+                                                                 memberExpression,
+                                                                 parameterExpression,
+                                                                 propertyType);
 
       return queryable.Where(e).AsQueryable();
     }
@@ -67,28 +69,47 @@ namespace CleenApi.Library.Queries.LinqUtilities
                                                  string fullText,
                                                  IEnumerable<string> propertiesToExclude)
     {
+      if (string.IsNullOrEmpty(fullText))
+      {
+        return queryable;
+      }
+
       Type type = typeof(TEntity);
       ParameterExpression parameterExpression = CreateParameterExpression(type);
 
       return queryable.Where(type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                                 .Where(p => p.PropertyType == typeof(string)
-                                             && !propertiesToExclude.Contains(p.Name))
-                                 .Select(p => BuildStringCondition<TEntity>("*" + fullText + "*",
-                                                                            Expression.Property(parameterExpression,
-                                                                                                p),
-                                                                            parameterExpression))
+                                 .Where(p => p.PropertyType == typeof(string) && !propertiesToExclude.Contains(p.Name))
+                                 .Select(p => StringCondition<TEntity>(new EntityCondition(ConditionOperator.Contains,
+                                                                                           fullText),
+                                                                       Expression.Property(parameterExpression, p),
+                                                                       parameterExpression))
                                  .Aggregate((l, r) => CreateOrExpression(l, r, parameterExpression)))
                       .AsQueryable();
     }
 
-    public Expression<Func<TEntity, bool>> BuildEqualCondition<TEntity>(object value,
-                                                                        MemberExpression memberExpression,
-                                                                        ParameterExpression parameterExpression,
-                                                                        Type propertyType)
+    public Expression<Func<TEntity, bool>> Condition<TEntity>(EntityCondition condition,
+                                                              MemberExpression memberExpression,
+                                                              ParameterExpression parameterExpression,
+                                                              Type propertyType)
     {
-      return Expression.Lambda<Func<TEntity, bool>>(Expression.Equal(memberExpression,
-                                                                     Expression.Constant(value, propertyType)),
-                                                    parameterExpression);
+      object value = ValueConverter.Convert(condition.Value, propertyType);
+      ConstantExpression constantExpression = Expression.Constant(value, propertyType);
+
+      BinaryExpression binaryExpression;
+
+      switch (condition.Operator)
+      {
+        case ConditionOperator.Equal:
+          binaryExpression = Expression.Equal(memberExpression, constantExpression);
+          break;
+        case ConditionOperator.NotEqual:
+          binaryExpression = Expression.NotEqual(memberExpression, constantExpression);
+          break;
+        default:
+          throw new ArgumentException($"{condition.Operator} is not supported.");
+      }
+
+      return Expression.Lambda<Func<TEntity, bool>>(binaryExpression, parameterExpression);
     }
 
     protected static PropertyInfo GetProperty<TEntity>(string name)

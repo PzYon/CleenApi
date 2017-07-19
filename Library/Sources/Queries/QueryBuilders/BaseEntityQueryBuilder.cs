@@ -75,14 +75,14 @@ namespace CleenApi.Library.Queries.QueryBuilders
     }
 
     protected virtual IQueryable<TEntity> ApplyConditions(IQueryable<TEntity> queryable,
-                                                          Dictionary<string, string> conditions)
+                                                          Dictionary<string, EntityCondition> conditions)
     {
-      foreach (KeyValuePair<string, string> condition in conditions)
+      foreach (KeyValuePair<string, EntityCondition> condition in conditions)
       {
         string propertyName = condition.Key;
-        string value = condition.Value;
+        EntityCondition entityCondition = condition.Value;
 
-        queryable = LinqUtility.Where(queryable, propertyName, value);
+        queryable = LinqUtility.Where(queryable, propertyName, entityCondition);
       }
 
       return queryable;

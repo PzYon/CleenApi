@@ -7,7 +7,7 @@ namespace CleenApi.Library.Queries.LinqUtilities
   {
     IQueryable<TEntity> Where<TEntity>(IQueryable<TEntity> queryable,
                                        string propertyName,
-                                       string value);
+                                       EntityCondition condition);
 
     IQueryable<TEntity> OrderBy<TEntity>(IQueryable<TEntity> queryable,
                                          string propertyName,
