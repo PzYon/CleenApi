@@ -99,14 +99,65 @@ namespace CleenApi.Library.Tests.BaseEntitySetTests
     }
 
     [TestMethod]
-    public void ByQuery_ReturnsEmpty()
+    public void ByQuery_Equal()
     {
       var q = new TestEntitySetQuery();
-      q.Conditions.Add(nameof(TestEntity.Name), new EntityCondition(ConditionOperator.Equals, "MichGitt'sSicherNöd"));
+      q.Conditions.Add(nameof(TestEntity.Name), new EntityCondition(ConditionOperator.Equal, "roger federer"));
+
+      TestEntity[] entities = new TestEntitySet(TestEntitiesRepo.DefaultEntities).Get(q).ToArray();
+
+      Assert.AreEqual(1, entities.Length);
+    }
+
+    [TestMethod]
+    public void ByQuery_NotEqual()
+    {
+      var q = new TestEntitySetQuery();
+      q.Conditions.Add(nameof(TestEntity.Name), new EntityCondition(ConditionOperator.NotEqual, "roger federer"));
+
+      var entitySet = new TestEntitySet(TestEntitiesRepo.DefaultEntities);
+      TestEntity[] entities = entitySet.Get(q).ToArray();
+
+      Assert.AreEqual(entitySet.RepoEntities.Count - 1, entities.Length);
+    }
+
+    [TestMethod]
+    public void ByQuery_Equal_ReturnsEmpty()
+    {
+      var q = new TestEntitySetQuery();
+      q.Conditions.Add(nameof(TestEntity.Name), new EntityCondition(ConditionOperator.Equal, "MichGitt'sSicherNöd"));
 
       TestEntity[] entities = new TestEntitySet(TestEntitiesRepo.DefaultEntities).Get(q).ToArray();
 
       Assert.AreEqual(0, entities.Length);
+    }
+
+    [TestMethod]
+    public void FullText()
+    {
+      var q = new TestEntitySetQuery { FullText = "roger" };
+
+      IQueryable<TestEntity> testEntities = new TestEntitySet(TestEntitiesRepo.DefaultEntities).Get(q);
+      TestEntity[] entities = testEntities.ToArray();
+
+      Assert.AreEqual(2, entities.Length);
+    }
+
+    [TestMethod]
+    public void FullText_ConsidersExcludes()
+    {
+      var q = new TestEntitySetQuery { FullText = "roger" };
+
+      var repoEntities = new List<TestEntity>
+        {
+          new TestEntity(12, "Foo", Stage.Alpha, "Bar", "bla bla roger bla bla"),
+          new TestEntity(24, "Baz", Stage.Alpha, "Roger", "abc")
+        };
+
+      IQueryable<TestEntity> testEntities = new TestEntitySet(repoEntities).Get(q);
+      TestEntity[] entities = testEntities.ToArray();
+
+      Assert.AreEqual(1, entities.Length);
     }
 
     [TestMethod]
@@ -142,34 +193,6 @@ namespace CleenApi.Library.Tests.BaseEntitySetTests
       TestEntity[] entities = new TestEntitySet(TestEntitiesRepo.DefaultEntities).Get(q).ToArray();
 
       Assert.AreEqual(expected, entities.Length);
-    }
-
-    [TestMethod]
-    public void FullText()
-    {
-      var q = new TestEntitySetQuery {FullText = "roger"};
-
-      IQueryable<TestEntity> testEntities = new TestEntitySet(TestEntitiesRepo.DefaultEntities).Get(q);
-      TestEntity[] entities = testEntities.ToArray();
-
-      Assert.AreEqual(2, entities.Length);
-    }
-
-    [TestMethod]
-    public void FullText_ConsidersExcludes()
-    {
-      var q = new TestEntitySetQuery {FullText = "roger"};
-
-      var repoEntities = new List<TestEntity>
-        {
-          new TestEntity(12, "Foo", Stage.Alpha, "Bar", "bla bla roger bla bla"),
-          new TestEntity(24, "Baz", Stage.Alpha, "Roger", "abc")
-        };
-
-      IQueryable<TestEntity> testEntities = new TestEntitySet(repoEntities).Get(q);
-      TestEntity[] entities = testEntities.ToArray();
-
-      Assert.AreEqual(1, entities.Length);
     }
   }
 }

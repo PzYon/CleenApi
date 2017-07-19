@@ -5,7 +5,7 @@ namespace CleenApi.Library.Queries
     Contains,
     BeginsWith,
     EndsWith,
-    Equals,
-    NotEquals
+    Equal,
+    NotEqual
   }
 }

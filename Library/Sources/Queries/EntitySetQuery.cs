@@ -21,6 +21,7 @@ namespace CleenApi.Library.Queries
       public static readonly char WildCard = '*';
       public static readonly char Separator = ',';
       public static readonly char Descending = '-';
+      public static readonly char NotEqual = '!';
     }
 
     public int Take { get; }
@@ -92,6 +93,7 @@ namespace CleenApi.Library.Queries
       bool isEndsWith = value.StartsWith(Chars.WildCard.ToString());
       bool isStartsWith = value.EndsWith(Chars.WildCard.ToString());
       bool isContains = isStartsWith && isEndsWith;
+      bool isNotEquals = value.StartsWith(Chars.NotEqual.ToString());
 
       if (isContains)
       {
@@ -108,7 +110,12 @@ namespace CleenApi.Library.Queries
         return new EntityCondition(ConditionOperator.EndsWith, value.TrimStart(Chars.WildCard));
       }
 
-      return new EntityCondition(ConditionOperator.Equals, value);
+      if (isNotEquals)
+      {
+        return new EntityCondition(ConditionOperator.NotEqual, value.TrimStart(Chars.NotEqual));
+      }
+
+      return new EntityCondition(ConditionOperator.Equal, value);
     }
   }
 }

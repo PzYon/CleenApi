@@ -5,9 +5,9 @@ namespace CleenApi.Library.Queries.LinqUtilities
 {
   public class DefaultLinqUtility : BaseLinqUtility
   {
-    protected override Expression<Func<TEntity, bool>> BuildStringCondition<TEntity>(EntityCondition condition,
-                                                                                     MemberExpression memberExpression,
-                                                                                     ParameterExpression param)
+    protected override Expression<Func<TEntity, bool>> StringCondition<TEntity>(EntityCondition condition,
+                                                                                MemberExpression memberExpression,
+                                                                                ParameterExpression param)
     {
       Type stringType = typeof(string);
       Type stringComparisonType = typeof(StringComparison);
@@ -24,10 +24,15 @@ namespace CleenApi.Library.Queries.LinqUtilities
                                                               Expression.Constant(condition.Value, stringType),
                                                               Expression.Constant(StringComparison.OrdinalIgnoreCase));
 
-      if (condition.Operator == ConditionOperator.Contains)
+      switch (condition.Operator)
       {
-        stringComparisonExpression = Expression.GreaterThan(stringComparisonExpression,
-                                                            Expression.Constant(-1, typeof(int)));
+        case ConditionOperator.Contains:
+          stringComparisonExpression = Expression.GreaterThan(stringComparisonExpression,
+                                                              Expression.Constant(-1, typeof(int)));
+          break;
+        case ConditionOperator.NotEqual:
+          stringComparisonExpression = Expression.Not(stringComparisonExpression);
+          break;
       }
 
       BinaryExpression notNullExp = Expression.NotEqual(memberExpression, Expression.Constant(null));
@@ -45,9 +50,9 @@ namespace CleenApi.Library.Queries.LinqUtilities
           return nameof(string.StartsWith);
         case ConditionOperator.EndsWith:
           return nameof(string.EndsWith);
-        case ConditionOperator.Equals:
+        case ConditionOperator.Equal:
+        case ConditionOperator.NotEqual:
           return nameof(string.Equals);
-        case ConditionOperator.NotEquals:
         default:
           throw new ArgumentOutOfRangeException(nameof(op), op, null);
       }

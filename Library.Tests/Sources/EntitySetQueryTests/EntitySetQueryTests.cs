@@ -18,6 +18,7 @@ namespace CleenApi.Library.Tests.EntitySetQueryTests
           GetAsKvp("containsCondition", EntitySetQuery.Chars.WildCard + "contains" + EntitySetQuery.Chars.WildCard),
           GetAsKvp("endsWithCondition", EntitySetQuery.Chars.WildCard + "endsWith"),
           GetAsKvp("beginsWithCondition", "beginsWith" + EntitySetQuery.Chars.WildCard),
+          GetAsKvp("notEqualsCondition", EntitySetQuery.Chars.NotEqual + "not_equal"),
           GetAsKvp(EntitySetQuery.UrlKeys.Skip, "1"),
           GetAsKvp(EntitySetQuery.UrlKeys.Take, "2"),
           GetAsKvp(EntitySetQuery.UrlKeys.OrderBy,
@@ -28,11 +29,12 @@ namespace CleenApi.Library.Tests.EntitySetQueryTests
 
       var q = new EntitySetQuery(pairs);
 
-      AssertCondition(q, "FirstCondition", "ConditionValue1", ConditionOperator.Equals);
-      AssertCondition(q, "SecondCondition", "ConditionValue2", ConditionOperator.Equals);
+      AssertCondition(q, "FirstCondition", "ConditionValue1", ConditionOperator.Equal);
+      AssertCondition(q, "SecondCondition", "ConditionValue2", ConditionOperator.Equal);
       AssertCondition(q, "ContainsCondition", "contains", ConditionOperator.Contains);
       AssertCondition(q, "EndsWithCondition", "endsWith", ConditionOperator.EndsWith);
       AssertCondition(q, "BeginsWithCondition", "beginsWith", ConditionOperator.BeginsWith);
+      AssertCondition(q, "NotEqualsCondition", "not_equal", ConditionOperator.NotEqual);
 
       Assert.AreEqual(1, q.Skip);
       Assert.AreEqual(2, q.Take);
