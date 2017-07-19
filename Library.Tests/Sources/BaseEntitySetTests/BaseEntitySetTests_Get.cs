@@ -135,7 +135,7 @@ namespace CleenApi.Library.Tests.BaseEntitySetTests
     [TestMethod]
     public void FullText()
     {
-      var q = new TestEntitySetQuery { FullText = "roger" };
+      var q = new TestEntitySetQuery {FullText = "roger"};
 
       IQueryable<TestEntity> testEntities = new TestEntitySet(TestEntitiesRepo.DefaultEntities).Get(q);
       TestEntity[] entities = testEntities.ToArray();
@@ -146,7 +146,7 @@ namespace CleenApi.Library.Tests.BaseEntitySetTests
     [TestMethod]
     public void FullText_ConsidersExcludes()
     {
-      var q = new TestEntitySetQuery { FullText = "roger" };
+      var q = new TestEntitySetQuery {FullText = "roger"};
 
       var repoEntities = new List<TestEntity>
         {

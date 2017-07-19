@@ -84,6 +84,7 @@
     <Compile Include="Sources\Entities\Locations\Location.cs" />
     <Compile Include="Sources\Entities\Locations\LocationChanges.cs" />
     <Compile Include="Sources\Entities\Users\UserEntitySet.cs" />
+    <Compile Include="Sources\Entities\Workspaces\SomeType.cs" />
     <Compile Include="Sources\Entities\Workspaces\WorkspaceEntitySet.cs" />
     <Compile Include="Sources\Entities\Locations\LocationsController.cs" />
     <Compile Include="Sources\Entities\NoDbItems\NoDbItemsController.cs" />

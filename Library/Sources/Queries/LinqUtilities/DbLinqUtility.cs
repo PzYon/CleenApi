@@ -25,7 +25,6 @@ namespace CleenApi.Library.Queries.LinqUtilities
           break;
 
         default:
-
           expression = Expression.Call(memberExpression,
                                        stringType.GetMethod(GetStringMethodName(condition.Operator),
                                                             new[] {stringType}),

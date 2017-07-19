@@ -5,12 +5,6 @@ using CleenApi.WebApi.Entities.Users;
 
 namespace CleenApi.WebApi.Entities.Workspaces
 {
-  public enum SomeType
-  {
-    Something,
-    SomethingElse
-  }
-
   public class Workspace : IEntity
   {
     public int Id { get; set; }
