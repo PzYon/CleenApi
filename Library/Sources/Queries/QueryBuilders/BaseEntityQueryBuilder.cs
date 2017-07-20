@@ -53,11 +53,6 @@ namespace CleenApi.Library.Queries.QueryBuilders
       return queryable;
     }
 
-    public virtual IEnumerable<string> GetPropertiesToExcludeFromFullText()
-    {
-      yield break;
-    }
-
     public IQueryable<TEntity> ApplyFullText(IQueryable<TEntity> queryable, string fullText)
     {
       return LinqUtility.FullText(queryable, fullText, GetPropertiesToExcludeFromFullText());
@@ -104,6 +99,11 @@ namespace CleenApi.Library.Queries.QueryBuilders
       }
 
       return queryable;
+    }
+
+    public virtual IEnumerable<string> GetPropertiesToExcludeFromFullText()
+    {
+      yield break;
     }
   }
 }
