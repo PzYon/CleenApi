@@ -36,7 +36,7 @@ namespace CleenApi.ExampleApi.Entities.Workspaces
     public User[] GetUsers(int workspaceId)
     {
       return EntitySet.GetUsersSet(workspaceId)
-                      .Get(Query)
+                      .Get(ParseQuery())
                       .ToArray();
     }
 
@@ -52,7 +52,7 @@ namespace CleenApi.ExampleApi.Entities.Workspaces
     public Location[] GetLocations(int workspaceId)
     {
       return EntitySet.GetLocationsSet(workspaceId)
-                      .Get(Query)
+                      .Get(ParseQuery())
                       .ToArray();
     }
 
@@ -62,7 +62,7 @@ namespace CleenApi.ExampleApi.Entities.Workspaces
     {
       return EntitySet.GetUsersSet(workspaceId)
                       .GetLocationsSet(userId)
-                      .Get(Query)
+                      .Get(ParseQuery())
                       .ToArray();
     }
   }

@@ -15,6 +15,8 @@ namespace CleenApi.Library.Tests.TestImplementations
 
     public Dictionary<string, SortDirection> SortFields { get; set; } = new Dictionary<string, SortDirection>();
 
-    public string[] Includes { get; set; } = new string[0];
+    public string[] Expands { get; set; } = new string[0];
+
+    public string[] Selects { get; set; } = new string[0];
   }
 }

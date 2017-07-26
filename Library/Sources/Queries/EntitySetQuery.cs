@@ -12,6 +12,7 @@ namespace CleenApi.Library.Queries
       public const string Skip = "$skip";
       public const string Take = "$take";
       public const string OrderBy = "$orderBy";
+      public const string Expand = "$expand";
       public const string Select = "$select";
       public const string FullText = "q";
     }
@@ -34,7 +35,9 @@ namespace CleenApi.Library.Queries
 
     public Dictionary<string, SortDirection> SortFields { get; } = new Dictionary<string, SortDirection>();
 
-    public string[] Includes { get; } = new string[0];
+    public string[] Expands { get; } = new string[0];
+
+    public string[] Selects { get; } = new string[0];
 
     public EntitySetQuery(IEnumerable<KeyValuePair<string, string>> pairs)
     {
@@ -73,12 +76,20 @@ namespace CleenApi.Library.Queries
             FullText = pair.Value;
             break;
 
-          case UrlKeys.Select:
-            Includes = pair.Value
+          case UrlKeys.Expand:
+            Expands = pair.Value
                            .Split(Chars.Separator)
                            .Select(v => v.Trim())
                            .Select(StringUtility.ToUpperCamelCase)
                            .ToArray();
+            break;
+
+          case UrlKeys.Select:
+            Selects = pair.Value
+                          .Split(Chars.Separator)
+                          .Select(v => v.Trim())
+                          .Select(StringUtility.ToUpperCamelCase)
+                          .ToArray();
             break;
 
           default:

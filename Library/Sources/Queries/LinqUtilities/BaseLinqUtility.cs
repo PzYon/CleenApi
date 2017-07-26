@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using CleenApi.Library.Exceptions;
 using CleenApi.Library.Utilities;
 
 namespace CleenApi.Library.Queries.LinqUtilities
@@ -18,10 +17,10 @@ namespace CleenApi.Library.Queries.LinqUtilities
                                               string propertyName,
                                               EntityCondition condition)
     {
-      PropertyInfo pi = GetProperty<TEntity>(propertyName);
+      PropertyInfo pi = ReflectionUtility.GetProperty<TEntity>(propertyName);
       Type propertyType = pi.PropertyType;
 
-      ParameterExpression parameterExpression = CreateParameterExpression(typeof(TEntity));
+      ParameterExpression parameterExpression = ExpressionUtility.CreateParameterExpression(typeof(TEntity));
       MemberExpression memberExpression = Expression.Property(parameterExpression, pi);
 
       Expression<Func<TEntity, bool>> e = propertyType == typeof(string)
@@ -42,9 +41,9 @@ namespace CleenApi.Library.Queries.LinqUtilities
                                                 bool isAlreadySorted)
     {
       Type type = typeof(TEntity);
-      PropertyInfo pi = GetProperty<TEntity>(propertyName);
+      PropertyInfo pi = ReflectionUtility.GetProperty<TEntity>(propertyName);
 
-      ParameterExpression parameterExpression = CreateParameterExpression(type);
+      ParameterExpression parameterExpression = ExpressionUtility.CreateParameterExpression(type);
       LambdaExpression orderByExp = Expression.Lambda(Expression.MakeMemberAccess(parameterExpression, pi),
                                                       parameterExpression);
 
@@ -75,7 +74,7 @@ namespace CleenApi.Library.Queries.LinqUtilities
       }
 
       Type type = typeof(TEntity);
-      ParameterExpression parameterExpression = CreateParameterExpression(type);
+      ParameterExpression parameterExpression = ExpressionUtility.CreateParameterExpression(type);
 
       return queryable.Where(type.GetProperties(BindingFlags.Public | BindingFlags.Instance)
                                  .Where(p => p.PropertyType == typeof(string) && !propertiesToExclude.Contains(p.Name))
@@ -83,7 +82,7 @@ namespace CleenApi.Library.Queries.LinqUtilities
                                                                                            fullText),
                                                                        Expression.Property(parameterExpression, p),
                                                                        parameterExpression))
-                                 .Aggregate((l, r) => CreateOrExpression(l, r, parameterExpression)))
+                                 .Aggregate((l, r) => ExpressionUtility.CreateOrExpression(l, r, parameterExpression)))
                       .AsQueryable();
     }
 
@@ -110,29 +109,6 @@ namespace CleenApi.Library.Queries.LinqUtilities
       }
 
       return Expression.Lambda<Func<TEntity, bool>>(binaryExpression, parameterExpression);
-    }
-
-    protected static PropertyInfo GetProperty<TEntity>(string name)
-    {
-      PropertyInfo pi = typeof(TEntity).GetTypeInfo().GetDeclaredProperty(name);
-      if (pi == null)
-      {
-        throw new EntityPropertyDoesNotExistException(typeof(TEntity), name);
-      }
-
-      return pi;
-    }
-
-    protected static ParameterExpression CreateParameterExpression(Type type)
-    {
-      return Expression.Parameter(type, StringUtility.ToCamelCase(type.Name));
-    }
-
-    private static Expression<Func<TEntity, bool>> CreateOrExpression<TEntity>(Expression<Func<TEntity, bool>> left,
-                                                                               Expression<Func<TEntity, bool>> right,
-                                                                               ParameterExpression param)
-    {
-      return Expression.Lambda<Func<TEntity, bool>>(Expression.Or(left.Body, right.Body), param);
     }
   }
 }
