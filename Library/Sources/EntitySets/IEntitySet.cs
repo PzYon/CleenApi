@@ -8,9 +8,9 @@ namespace CleenApi.Library.EntitySets
     where TEntity : IEntity
     where TEntityChanges : IEntityChanges<TEntity>
   {
-    TEntity Get(int id, string[] includes);
-
     IQueryable<TEntity> Get(IEntitySetQuery query);
+
+    TEntity Get(int id);
 
     TEntity Update(TEntityChanges entityChanges, int id = 0);
 

@@ -23,8 +23,9 @@ namespace CleenApi.Library.Tests.EntitySetQueryTests
           GetAsKvp(EntitySetQuery.UrlKeys.Take, "2"),
           GetAsKvp(EntitySetQuery.UrlKeys.OrderBy,
                    EntitySetQuery.Chars.Descending + "Foo" + EntitySetQuery.Chars.Separator + "Bar"),
-          GetAsKvp(EntitySetQuery.UrlKeys.Select, "Bli,Bla"),
-          GetAsKvp(EntitySetQuery.UrlKeys.FullText, "miep")
+          GetAsKvp(EntitySetQuery.UrlKeys.Expand, "Bli,Bla"),
+          GetAsKvp(EntitySetQuery.UrlKeys.FullText, "miep"),
+          GetAsKvp(EntitySetQuery.UrlKeys.Select, "foo,bar")
         };
 
       var q = new EntitySetQuery(pairs);
@@ -42,8 +43,11 @@ namespace CleenApi.Library.Tests.EntitySetQueryTests
       Assert.AreEqual(q.SortFields["Foo"], SortDirection.Descending);
       Assert.AreEqual(q.SortFields["Bar"], SortDirection.Ascending);
 
-      Assert.IsTrue(q.Includes.Contains("Bli"));
-      Assert.IsTrue(q.Includes.Contains("Bla"));
+      Assert.IsTrue(q.Expands.Contains("Bli"));
+      Assert.IsTrue(q.Expands.Contains("Bla"));
+
+      Assert.IsTrue(q.Selects.Contains("Foo"));
+      Assert.IsTrue(q.Selects.Contains("Bar"));
 
       Assert.AreEqual("miep", q.FullText);
     }

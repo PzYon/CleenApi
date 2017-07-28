@@ -4,6 +4,7 @@ using System.Linq;
 using CleenApi.Library.EntitySets;
 using CleenApi.Library.Exceptions;
 using CleenApi.Library.Queries.LinqUtilities;
+using CleenApi.Library.Utilities;
 
 namespace CleenApi.Library.Queries.QueryBuilders
 {
@@ -23,7 +24,7 @@ namespace CleenApi.Library.Queries.QueryBuilders
         return queryable;
       }
 
-      queryable = ApplyIncludes(queryable, query.Includes);
+      queryable = ApplyIncludes(queryable, query.Expands);
       queryable = ApplyConditions(queryable, query.Conditions);
       queryable = ApplyFullText(queryable, query.FullText);
       queryable = ApplyOrderBy(queryable, query.SortFields);
@@ -32,7 +33,8 @@ namespace CleenApi.Library.Queries.QueryBuilders
       {
         if (!query.SortFields.Any())
         {
-          throw new InvalidRequestException("$skip can only be applied in combination with $orderBy");
+          throw new InvalidRequestException($"{EntitySetQuery.UrlKeys.Skip} can only be applied in combination "
+                                            + $"with {EntitySetQuery.UrlKeys.OrderBy}");
         }
 
         queryable = queryable.Skip(query.Skip);
@@ -63,7 +65,8 @@ namespace CleenApi.Library.Queries.QueryBuilders
     {
       foreach (string include in includes)
       {
-        queryable = queryable.Include(include);
+        // make detour via GetProperty in order to be sure the property actually exists on TEntity
+        queryable = queryable.Include(ReflectionUtility.GetProperty<TEntity>(include).Name);
       }
 
       return queryable;

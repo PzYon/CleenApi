@@ -21,16 +21,9 @@ namespace CleenApi.Library.EntitySets
 
     public abstract void Dispose();
 
-    public TEntity Get(int id, string[] includes = null)
+    public TEntity Get(int id)
     {
-      IQueryable<TEntity> queryable = QueryBuilder.ApplyDefaults(Entities);
-
-      if (includes != null)
-      {
-        queryable = QueryBuilder.ApplyIncludes(queryable, includes);
-      }
-
-      TEntity entity = queryable.SingleOrDefault(e => e.Id == id);
+      TEntity entity = QueryBuilder.ApplyDefaults(Entities).SingleOrDefault(e => e.Id == id);
       if (entity == null)
       {
         throw new EntityNotFoundException<TEntity>(id);

@@ -14,6 +14,8 @@ namespace CleenApi.Library.Queries
 
     Dictionary<string, SortDirection> SortFields { get; }
 
-    string[] Includes { get; }
+    string[] Expands { get; }
+
+    string[] Selects { get; }
   }
 }

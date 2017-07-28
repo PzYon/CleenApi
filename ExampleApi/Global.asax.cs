@@ -32,7 +32,8 @@ namespace CleenApi.ExampleApi
         {
           Formatting = Formatting.Indented,
           Converters = new List<JsonConverter> {new StringEnumConverter()},
-          ContractResolver = new CamelCasePropertyNamesContractResolver()
+          ContractResolver = new CamelCasePropertyNamesContractResolver(),
+          NullValueHandling = NullValueHandling.Ignore
         };
     }
   }
