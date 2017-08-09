@@ -38,6 +38,7 @@
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -91,6 +92,11 @@
     <Compile Include="Sources\Web\Controllers\BaseDbEntitySetController.cs" />
     <Compile Include="Sources\Web\Controllers\BaseEntitySetController.cs" />
     <Compile Include="Sources\Queries\Dynamic\DynamicType.cs" />
+    <Compile Include="Sources\Web\Hypermedia\IEntityLinker.cs" />
+    <Compile Include="Sources\Web\Hypermedia\Link.cs" />
+    <Compile Include="Sources\Web\Hypermedia\LinkBuilder.cs" />
+    <Compile Include="Sources\Web\Hypermedia\EntityLinkerCache.cs" />
+    <Compile Include="Sources\Web\Hypermedia\LinkUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

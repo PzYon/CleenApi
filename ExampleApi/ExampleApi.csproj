@@ -84,11 +84,13 @@
     <Compile Include="Sources\Entities\Locations\Location.cs" />
     <Compile Include="Sources\Entities\Locations\LocationChanges.cs" />
     <Compile Include="Sources\Entities\Users\UserEntitySet.cs" />
+    <Compile Include="Sources\Entities\Users\UserEntityLinker.cs" />
     <Compile Include="Sources\Entities\Workspaces\SomeType.cs" />
     <Compile Include="Sources\Entities\Workspaces\WorkspaceEntitySet.cs" />
     <Compile Include="Sources\Entities\Locations\LocationsController.cs" />
     <Compile Include="Sources\Entities\NoDbItems\NoDbItemsController.cs" />
     <Compile Include="Sources\Entities\Users\UsersController.cs" />
+    <Compile Include="Sources\Entities\Workspaces\WorkspaceEntityLinker.cs" />
     <Compile Include="Sources\Entities\Workspaces\WorkspacesController.cs" />
     <Compile Include="Sources\Database\CleenApiDbContext.cs" />
     <Compile Include="Sources\Database\CleenApiDbInitializer.cs" />

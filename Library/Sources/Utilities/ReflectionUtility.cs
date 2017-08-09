@@ -1,3 +1,6 @@
+using System;
+using System.Collections;
+using System.Linq;
 using System.Reflection;
 using CleenApi.Library.Exceptions;
 
@@ -14,6 +17,11 @@ namespace CleenApi.Library.Utilities
       }
 
       return pi;
+    }
+
+    public static bool IsEnumerable(Type propertyType)
+    {
+      return propertyType.GetTypeInfo().ImplementedInterfaces.Any(i => i == typeof(IEnumerable));
     }
   }
 }

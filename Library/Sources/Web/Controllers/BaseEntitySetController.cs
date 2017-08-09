@@ -7,6 +7,7 @@ using CleenApi.Library.EntitySets;
 using CleenApi.Library.Exceptions;
 using CleenApi.Library.Queries;
 using CleenApi.Library.Queries.Dynamic;
+using CleenApi.Library.Web.Hypermedia;
 
 namespace CleenApi.Library.Web.Controllers
 {
@@ -46,7 +47,17 @@ namespace CleenApi.Library.Web.Controllers
     {
       IEntitySetQuery query = ParseQuery();
 
-      return EnsureSelects(query, EntitySet.Get(query)).ToArray();
+      IQueryable<TEntity> queryable = EntitySet.Get(query);
+
+      if (LinkUtility.AreResourceLinksEnabled)
+      {
+        // todo: EnsureSelects here too
+        return queryable.ToArray()
+                        .Select(LinkBuilder.EnsureLinks)
+                        .ToArray();
+      }
+
+      return EnsureSelects(query, queryable).ToArray();
     }
 
     public virtual TEntity Put([FromBody] TEntityChanges entityChanges, int id = 0)
